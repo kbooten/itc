@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with Server</title>
+    <style>
+        body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        #messages { flex-grow: 1; overflow-y: auto; padding: 10px; background: #f4f4f4; }
+        #input-area { display: flex; padding: 10px; background: #ddd; }
+        textarea { flex-grow: 1; margin-right: 10px; resize: none; height: 50px; }
+        button { width: 100px; height: 50px; }
+    </style>
+</head>
+<body>
+    <div id="messages"></div>
+    <div id="input-area">
+        <form id="chat-form">
+            <textarea id="message" name="message" placeholder=">" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("chat-form");
+            const textarea = document.getElementById("message");
+            const button = form.querySelector("button");
+            const msgArea = document.getElementById("messages");
+
+            // Event listener for textarea keydown
+            textarea.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault(); // Prevent the default action (new line)
+                    form.submit(); // Trigger form submission
+                }
+            });
+
+
+
+            form.onsubmit = function(e) {
+                button.disabled = true; // Disable button to prevent multiple submissions
+                e.preventDefault(); // Prevent normal form submission
+                const message = textarea.value.trim();
+                button.disabled = true; // Disable button to prevent multiple submissions
+                textarea.disabled = true; // Disable textarea to prevent further input
+                textarea.value = "!!!"; // Clear input after sending
+                if (message) {
+                    fetch("/send_message", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'message=' + encodeURIComponent(message)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            alert(data.error);
+                        } else {
+                            // Append user message and server response to the chat area
+                            msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+                            msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                            textarea.value = ""; // Clear input after sending
+                            msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch Error:', error);
+                        alert('An error occurred. Please check the console for details.');
+                    })
+                    .finally(() => {
+                        textarea.disabled = false; // Re-enable textarea after response
+                        button.disabled = false; // Re-enable button after response
+                        // textarea.value = ""; // Clear input after sending
+                        // textarea.focus(); // Focus textarea ready for next message
+                        // msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                    });
+                }
+            };
+        });
+    </script>
+</body>
+</html>
+
