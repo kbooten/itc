@@ -30,11 +30,9 @@
             textarea.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault(); // Prevent the default action (new line)
-                    form.submit(); // Trigger form submission
+                    form.dispatchEvent(new Event("submit")); // Trigger form submission
                 }
             });
-
-
 
             form.onsubmit = function(e) {
                 button.disabled = true; // Disable button to prevent multiple submissions
@@ -42,7 +40,7 @@
                 const message = textarea.value.trim();
                 button.disabled = true; // Disable button to prevent multiple submissions
                 textarea.disabled = true; // Disable textarea to prevent further input
-                textarea.value = "!!!"; // Clear input after sending
+                textarea.value = "..."; // Clear input after sending
                 if (message) {
                     fetch("/send_message", {
                         method: "POST",
@@ -81,4 +79,5 @@
     </script>
 </body>
 </html>
+
 

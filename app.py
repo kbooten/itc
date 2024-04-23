@@ -8,6 +8,7 @@ users = {
     "itc": "platsplatsplats",
 }
 
+from llm_interface import get_llm_response
 
 @auth.verify_password
 def verify_password(username, password):
@@ -17,10 +18,7 @@ def verify_password(username, password):
 messages = []
 
 def process_input(text):
-    import time
-    time.sleep(5)
-    return text + "?"
-
+    return get_llm_response(text)
 
 @app.route("/", methods=["GET"])
 @auth.login_required
@@ -31,7 +29,6 @@ def index():
 def send_message():
     user_input = request.form.get("message")
     if user_input.strip() != "":
-        print(user_input)
         messages.append({"user": "You", "text": user_input})
         response = process_input(user_input)
         messages.append({"user": "Server", "text": response})
