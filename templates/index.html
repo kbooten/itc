@@ -14,63 +14,61 @@
 <body>
     <div id="messages"></div>
     <div id="input-area">
-        <form id="chat-form">
-            <textarea id="message" name="message" placeholder=">" required></textarea>
-            <button type="submit">Send</button>
-        </form>
+        <textarea id="message" placeholder="Type here and press Enter to send" required></textarea>
+        <button onclick="sendMessage()">Send</button>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const form = document.getElementById("chat-form");
             const textarea = document.getElementById("message");
-            const button = form.querySelector("button");
+            const button = document.querySelector("button");
             const msgArea = document.getElementById("messages");
 
+            // Function to handle sending messages
+            function sendMessage() {
+                const message = textarea.value.trim();
+                if (!message) return; // Do nothing if the message is empty
+
+                textarea.disabled = true; // Disable textarea during send
+                button.disabled = true; // Disable button during send
+
+                // Simulate sending the message
+                fetch("/send_message", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'message=' + encodeURIComponent(message)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        alert(data.error);
+                    } else {
+                        msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+                        msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                        msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    alert('An error occurred. Please check the console for details.');
+                })
+                .finally(() => {
+                    textarea.disabled = false; // Re-enable textarea after response
+                    button.disabled = false; // Re-enable button after response
+                    textarea.value = ""; // Clear input after sending
+                    textarea.focus(); // Focus textarea ready for next message
+                });
+            }
+
+            // Listen for Enter key press to send message
             textarea.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault(); // Prevent default line break
-                    console.log("Enter pressed, attempting to submit form.");
-                    form.dispatchEvent(new Event("submit")); // Manually trigger form submission
+                    event.preventDefault(); // Prevent the default action (new line)
+                    sendMessage(); // Call function to send message
                 }
             });
-
-            form.onsubmit = function(e) {
-                e.preventDefault(); // Prevent normal form submission
-                const message = textarea.value.trim();
-                if (message) {
-                    console.log("Form submitted, message: " + message);
-                    textarea.disabled = true; // Disable textarea during send
-                    button.disabled = true; // Disable button during send
-                    fetch("/send_message", {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'message=' + encodeURIComponent(message)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            console.error('Error:', data.error);
-                            alert(data.error);
-                        } else {
-                            msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
-                            msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
-                            msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fetch Error:', error);
-                        alert('An error occurred. Please check the console for details.');
-                    })
-                    .finally(() => {
-                        textarea.disabled = false; // Re-enable textarea after response
-                        button.disabled = false; // Re-enable button after response
-                        textarea.value = ""; // Clear input after sending
-                        textarea.focus(); // Focus textarea ready for next message
-                    });
-                }
-            };
         });
     </script>
 </body>

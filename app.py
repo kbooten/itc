@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
+
 from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
