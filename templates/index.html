@@ -26,22 +26,21 @@
             const button = form.querySelector("button");
             const msgArea = document.getElementById("messages");
 
-            // Event listener for textarea keydown
             textarea.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault(); // Prevent the default action (new line)
-                    form.dispatchEvent(new Event("submit")); // Trigger form submission
+                    event.preventDefault(); // Prevent default line break
+                    console.log("Enter pressed, attempting to submit form.");
+                    form.dispatchEvent(new Event("submit")); // Manually trigger form submission
                 }
             });
 
             form.onsubmit = function(e) {
-                button.disabled = true; // Disable button to prevent multiple submissions
                 e.preventDefault(); // Prevent normal form submission
                 const message = textarea.value.trim();
-                button.disabled = true; // Disable button to prevent multiple submissions
-                textarea.disabled = true; // Disable textarea to prevent further input
-                textarea.value = "..."; // Clear input after sending
                 if (message) {
+                    console.log("Form submitted, message: " + message);
+                    textarea.disabled = true; // Disable textarea during send
+                    button.disabled = true; // Disable button during send
                     fetch("/send_message", {
                         method: "POST",
                         headers: {
@@ -55,10 +54,8 @@
                             console.error('Error:', data.error);
                             alert(data.error);
                         } else {
-                            // Append user message and server response to the chat area
                             msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
                             msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
-                            textarea.value = ""; // Clear input after sending
                             msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
                         }
                     })
@@ -69,9 +66,8 @@
                     .finally(() => {
                         textarea.disabled = false; // Re-enable textarea after response
                         button.disabled = false; // Re-enable button after response
-                        // textarea.value = ""; // Clear input after sending
-                        // textarea.focus(); // Focus textarea ready for next message
-                        // msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                        textarea.value = ""; // Clear input after sending
+                        textarea.focus(); // Focus textarea ready for next message
                     });
                 }
             };
@@ -79,5 +75,6 @@
     </script>
 </body>
 </html>
+
 
 
