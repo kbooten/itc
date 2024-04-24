@@ -1,10 +1,17 @@
 from openai import OpenAI
 
-from dotenv import load_dotenv
-import os
-load_dotenv()  # load all the environment variables from '.env' file
-openai_api_key = os.getenv('OPENAI_API_KEY')
-print(openai_api_key)
+
+
+# Try to load dotenv if available
+try:
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()  # This will load environment variables from a .env file if present
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+
+except ImportError:
+    # dotenv is not installed, continue without loading a .env file
+    print("dotenv is not available, skipping load_dotenv")
 
 
 client = OpenAI()
