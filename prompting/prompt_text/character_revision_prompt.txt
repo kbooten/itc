@@ -1,0 +1,21 @@
+The point of this task is to (possibly) revise a YAML description of a character.  This is in the context of a text adventure game.  I am going to give you two pieces of information: the user's most recent input and the game's most recent response to this input.
+
+I am going to show you a YAML description of the user and ask you if you should change it (by changing or adding values to the player's addtributes or the player's inventory).
+
+I want you to do one of two things.  If the description of the player should change in some major way (gaining or losing strength, gaining or losing an object, etc.), please revise the description, changing as little of it as possible to keep track of the new information and otherwise simply repeating it word for word.  Try to be concise but also to include all information you might need later---so, for instance, if a character picks up a watch and then learns that if you shake it it makes rain, make sure to note this new information so it can be kept consistent later in the game. If nothing should change, please simply reply "!SAME!" (all caps, and make sure that there are exclamation points on either side ).
+
+Ok, now it is your turn. 
+
+First, the original status of the player, which may need to be revised:
+
+<<payload>>>
+
+Next, the player's last move:
+
+<<user_input>>
+
+Then the game's most recent response to that move:
+
+<<llm_response>>
+
+Again, please either respond with a revised YAML description of the player's attributes and possessions (if it seems like the description should be revised) or with "!SAME!" (if nothing really has changed).

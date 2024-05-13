@@ -18,6 +18,10 @@
         <button onclick="sendMessage()">Send</button>
     </div>
     <script>
+
+        var user_id = "test"
+        var room_id = "room0"
+        
         document.addEventListener("DOMContentLoaded", function() {
             const textarea = document.getElementById("message");
             const button = document.querySelector("button");
@@ -37,7 +41,8 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: 'message=' + encodeURIComponent(message)
+                    body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id)
+                        
                 })
                 .then(response => response.json())
                 .then(data => {

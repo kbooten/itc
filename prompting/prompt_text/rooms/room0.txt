@@ -1,0 +1,5 @@
+name: Kitchen
+public_description: >
+  An L-shaped countertop made of petalite. The counter is crowded with high-end cooking equipment: for instance, a Pavioni lever espresso machine, a Malkonig grinder, a Mitsubishi electric toaster bread oven, a Zojirushi fuzzy logic rice cooker. Embedded in the countertop are recipes that, if ingested, should allow one’s body to be able to lift heavier and heavier doors and other objects to jump across greater and greater distances, among other powers. There is also in this room a collection of pots and pans and a pit where one could create a fire.
+secret_description: >
+  These recipes have side-effects. For instance, the one that makes you stronger also makes it so you are intensely hungry for glass, and in fact you will become incredibly weak if you go too long without eating glass. The one that makes you jump far makes it so you are very sad most of the time.

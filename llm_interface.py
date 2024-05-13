@@ -1,7 +1,6 @@
 from openai import OpenAI
 
 
-
 # Try to load dotenv if available
 try:
     from dotenv import load_dotenv
