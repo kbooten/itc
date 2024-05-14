@@ -1,0 +1,33 @@
+The point of this task is to figure out if a player in a text adventure game has moved from one room to another.
+
+And, if so, to figure out the name of the next room, which may be something like "Kitchen" and may be something like "room2415" (but don't use the quotes).
+
+I am going to show you three (3) pieces of data:
+
+- YAML describing the current room, where the player is
+- the player's most recent input
+- the text adventure game's most recent output.  
+
+If the user seems like they have successfully attempted to go through the door, try to figure out from the YAML description of the current room what the next room's name is.  
+
+If, on the other hand, they either haven't tried to go through a door or haven't successfully done so (because, for instance, the room is locked), reply "!SAME!".
+
+---
+
+Ok, here's the data. 
+
+First, the current room's YAML, including description of doors and names of rooms where doors lead:
+
+<<payload>>>
+
+Next, the user's most recent input:
+
+<<user_input>>
+
+Finally, the text adventure game's response to that most recent input:
+
+<<llm_response>>
+
+---
+
+So, remember, reply with either the name of the new room (from the "leads_to" YAML field) or, if still in same room, "!SAME!"

@@ -1,0 +1,11 @@
+name: Cave
+public_description: >
+  Empty except for a plinth made of marble. 
+secret_description: >
+  If you put the right object on the plinth, it will play a song.
+doors:
+  - leads_to: room0
+    requirements:
+      have_item: Magic Key
+      task_completed: Solve Riddle
+

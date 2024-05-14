@@ -23,11 +23,12 @@ def verify_password(meta_username, password):
     if meta_username in users and users[meta_username] == password:
         return meta_username
 
-def process_input(user_text,user_name):
+def process_input(user_text,user_name): ## this should be somewhere else!
     llm_response =  get_llm_response(build_prompt(user_text,user_name)) ## this will create a new user but should refactor
     room = get_current_room_of_player(user_name)
     maybe_update_room(user_text,llm_response,room,debug=True)
     maybe_update_character(user_text,llm_response,user_name,debug=True)
+    maybe_update_room(user_text,llm_response)
     return llm_response
 
 @app.route("/", methods=["GET"])
