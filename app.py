@@ -28,7 +28,7 @@ def process_input(user_text,user_name): ## this should be somewhere else!
     room = get_current_room_of_player(user_name)
     maybe_update_room(user_text,llm_response,room,debug=True)
     maybe_update_character(user_text,llm_response,user_name,debug=True)
-    maybe_update_room(user_text,llm_response)
+    maybe_move_to_new_room(user_text,llm_response)
     return llm_response
 
 @app.route("/", methods=["GET"])
