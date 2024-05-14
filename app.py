@@ -14,13 +14,21 @@ users = {
 
 from llm_interface import get_llm_response
 
+from update_text_with_llm import maybe_update_room, maybe_update_character
+
+from little_utilities import get_current_room_of_player
+
 @auth.verify_password
-def verify_password(username, password):
-    if username in users and users[username] == password:
-        return username
+def verify_password(meta_username, password):
+    if meta_username in users and users[meta_username] == password:
+        return meta_username
 
 def process_input(user_text,user_name):
-    llm_response =  get_llm_response(build_prompt(user_text,user_name))
+    llm_response =  get_llm_response(build_prompt(user_text,user_name)) ## this will create a new user but should refactor
+    room = get_current_room_of_player(user_name)
+    maybe_update_room(user_text,llm_response,room,debug=True)
+    maybe_update_character(user_text,llm_response,user_name,debug=True)
+    return llm_response
 
 @app.route("/", methods=["GET"])
 @auth.login_required
@@ -31,7 +39,6 @@ def index():
 def send_message():
     user_input = request.form.get("message")
     user_id = request.form.get("user_id")
-    room_id = request.form.get("room_id") 
     if user_input.strip() != "":
         response = process_input(user_input,user_id)
         return jsonify({"user": "Server", "text": response})  # Return only the server's response

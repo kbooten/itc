@@ -7,6 +7,8 @@ path_to_prompts = os.path.join(module_dir, 'prompting/prompt_text')
 
 import new_user ## if user is new, will need to set up files
 
+from little_utilities import get_current_room_of_player
+
 def get_main_prompt():
     with open(path_to_prompts+"/main_game_prompt.txt",'r') as f:
         main_prompt = f.read()
@@ -48,11 +50,6 @@ def get_user_data(user_name):
     with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
         user_data = f.read()
     return user_data
-
-def get_current_room_of_player(user_name):
-    with open('player2room.json','r') as f:
-        player2room = json.load(f)
-    return player2room[user_name]
 
 
 def build_prompt(user_input="what can I do?",user_name="test",room_id="room0"):

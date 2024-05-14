@@ -19,7 +19,6 @@ basic_character_yaml ="""character:
 ###
 import json
 
-
 def create_new_player_file(player_name):
   with open(path_to_players+player_name+".txt",'w') as f:
     f.write(basic_character_yaml)

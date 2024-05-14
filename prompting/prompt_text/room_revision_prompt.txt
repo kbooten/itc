@@ -67,7 +67,7 @@ See, the description of the room has been changed to reflect the fact that one o
 
 ---
 
-Ok, those were the examples. Now it is your turn.  First the user's most recent input:
+Ok, those were the examples. Now it is your turn. 
 
 First, the original description of the room, which may need to be revised:
 

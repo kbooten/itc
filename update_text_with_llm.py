@@ -15,7 +15,7 @@ def fill_out_prompt(prompt,user_input,llm_response,payload):
     return prompt
 
 
-def maybe_update(user_input,llm_response,prompt,file,debug=False):
+def _maybe_update(user_input,llm_response,prompt,file,debug=False):
     with open(file,'r') as f:
         payload = f.read()
     prompt = fill_out_prompt(prompt,user_input,llm_response,payload)
@@ -30,27 +30,29 @@ def maybe_update(user_input,llm_response,prompt,file,debug=False):
                 print("overwriting file %s" % file)
                 f.write(response_from_llm)
 
-def update_room_test():
-    file = path_to_prompts+"/rooms/room0.txt"
-    user_input = "grab Pavioni lever espresso machine and place it in my bag" 
-    llm_response = "You take the espresso machine."
+def maybe_update_room(   user_input="grab Pavioni lever espresso machine and place it in my bag",
+                        llm_response="You take the espresso machine.",
+                        room="room0",
+                        debug=False):
+    file = path_to_prompts+"/rooms/"+room+".txt"
     with open(path_to_prompts+"/room_revision_prompt.txt",'r') as f:
         prompt = f.read()
-    maybe_update(user_input,llm_response,prompt,file,debug=True)
+    _maybe_update(user_input,llm_response,prompt,file,debug=debug)
 
 
-def update_character_test():
-    file = path_to_prompts+"/player_data/test.txt"
-    user_input = "grab Pavioni lever espresso machine and place it in my bag" 
-    llm_response = "You take the espresso machine."
+def maybe_update_character(  user_input="grab Pavioni lever espresso machine and place it in my bag",
+                            llm_response="You take the espresso machine.",
+                            user_name="test",
+                            debug=False):
+    file = path_to_prompts+"/player_data/"+user_name+".txt"
     with open(path_to_prompts+"/character_revision_prompt.txt",'r') as f:
         prompt = f.read()
-    maybe_update(user_input,llm_response,prompt,file,debug=True)
+    _maybe_update(user_input,llm_response,prompt,file,debug=debug)
 
 
 def main():
-    update_room_test()
-    update_character_test()
+    maybe_update_room(debug=True)
+    maybe_update_character(debug=True)
 
 
 if __name__ == '__main__':
