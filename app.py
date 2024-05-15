@@ -25,6 +25,8 @@ new_user.create_new_player_file('test')### need to do this based on id frontend 
 
 from write_to_google_sheet import append_data_to_google_sheet
 
+import time
+
 @auth.verify_password
 def verify_password(meta_username, password):
     if meta_username in users and users[meta_username] == password:
@@ -37,7 +39,7 @@ def process_input(user_text,user_name): ## this should be somewhere else!
     maybe_update_character(user_text,llm_response,user_name,debug=True)
     maybe_move_to_new_room(user_name,user_text,llm_response)
     ## write to google
-    append_data_to_google_sheet([[user_name,user_text,llm_response]])
+    append_data_to_google_sheet([[int(time.time()),user_name,user_text,llm_response]])
     return llm_response
 
 @app.route("/", methods=["GET"])
