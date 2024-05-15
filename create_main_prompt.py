@@ -5,7 +5,7 @@ import json
 module_dir = os.path.dirname(__file__) 
 path_to_prompts = os.path.join(module_dir, 'prompting/prompt_text')
 
-import new_user ## if user is new, will need to set up files
+#import new_user ## if user is new, will need to set up files
 
 from little_utilities import get_current_room_of_player
 
@@ -42,11 +42,11 @@ def get_current_room_text(room_id):
 
 
 def get_user_data(user_name):
-    try:
-        with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
-            user_data = f.read()
-    except FileNotFoundError:
-        new_user.create_new_player_file(user_name)
+    # try:
+    #     with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
+    #         user_data = f.read()
+    # except FileNotFoundError:
+    #     new_user.create_new_player_file(user_name)
     with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
         user_data = f.read()
     return user_data

@@ -2,3 +2,8 @@ Flask
 Gunicorn
 openai==1.23.2
 flask_httpauth
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+gspread

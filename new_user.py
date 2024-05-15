@@ -25,9 +25,7 @@ def create_new_player_file(player_name):
   ## put in starting room
   with open('player2room.json','r') as f:
     player2room = json.load(f)
-  print(player2room)
   player2room[player_name]="room0"
-  print(player2room)
   with open('player2room.json','w') as f:
     json.dump(player2room,f)
 
