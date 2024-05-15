@@ -19,15 +19,57 @@
     </div>
     <script>
 
-        var user_id = "test"
-        var room_id = "room0"
-        
+        function generateRandomId(length) {
+          let result = '';
+          for (let i = 0; i < length; i++) {
+            result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
+          }
+          return result;
+        }
+
+        (function() {
+          var id = localStorage.getItem("inside_the_castle_id");
+          if (!id) {
+            id = "user"+generateRandomId(7)
+            localStorage.setItem("inside_the_castle_id", id);
+          }
+          window.user_id = id; // This sets a global variable `myGlobalId`
+        })();
+                
         document.addEventListener("DOMContentLoaded", function() {
+
+
             const textarea = document.getElementById("message");
             const button = document.querySelector("button");
             const msgArea = document.getElementById("messages");
 
-            // Function to handle sending messages
+
+             // Handshake with the server
+             // send user id, get initial status
+              fetch("/handshake", {
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + encodeURIComponent(user_id)
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.error) {
+                  console.error('Handshake error:', data.error);
+                } else {
+                  console.log('Handshake successful:', data.message);
+                  msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                  msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                }
+              })
+              .catch(error => {
+                console.error('Handshake Fetch Error:', error);
+              });
+
+
+
+            // Function to handle typical sending input/receving output messages
             function sendMessage() {
                 const message = textarea.value.trim();
                 if (!message) return; // Do nothing if the message is empty

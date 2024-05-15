@@ -21,7 +21,6 @@ from move_to_new_room import maybe_move_to_new_room
 from little_utilities import get_current_room_of_player
 
 import new_user 
-new_user.create_new_player_file('test')### need to do this based on id frontend invents
 
 from write_to_google_sheet import append_data_to_google_sheet
 
@@ -46,6 +45,14 @@ def process_input(user_text,user_name): ## this should be somewhere else!
 @auth.login_required
 def index():
     return render_template("index.html")  # Initial page load
+
+@app.route("/handshake", methods=["POST"])
+def handshake():
+    user_id = request.form.get("user_id")
+    new_user.maybe_create_new_player_file(user_id)
+    response = process_input("Could you please tell me where I am and what I should do?",user_id)
+    return jsonify({"user": "Server", "text": response})  # Return only the server's response
+    return jsonify({"error": "No message received"})
 
 @app.route("/send_message", methods=["POST"])
 def send_message():

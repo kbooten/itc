@@ -19,15 +19,25 @@ basic_character_yaml ="""character:
 ###
 import json
 
-def create_new_player_file(player_name):
-  with open(path_to_players+player_name+".txt",'w') as f:
-    f.write(basic_character_yaml)
-  ## put in starting room
+def maybe_create_new_player_file(user_id):
+  """
+  create a new character (with location and attributes/inventory yaml)
+  but don't overwrite
+  """
   with open('player2room.json','r') as f:
     player2room = json.load(f)
-  player2room[player_name]="room0"
-  with open('player2room.json','w') as f:
-    json.dump(player2room,f)
+    if user_id not in player2room:
+      ## put in starting room
+      with open('player2room.json','r') as f:
+        player2room = json.load(f)
+      player2room[user_id]="room0"
+      with open('player2room.json','w') as f:
+        json.dump(player2room,f)
+      with open(path_to_players+user_id+".txt",'w') as f:
+        f.write(basic_character_yaml)
+      print("created character named %s" % user_id)
+    else:
+      print("continuing from %s I was" % user_id)
 
 def main():
   print("creating player named test")

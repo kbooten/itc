@@ -14,27 +14,6 @@ def get_main_prompt():
         main_prompt = f.read()
     return main_prompt
 
-
-# def get_rooms(specific_files=None):
-#     """
-#     gets the text of room descriptions
-#     just puts them together as a string
-#     optionally takes argument for specific file names
-#     """
-#     room_files = [i for i in os.listdir(path_to_prompts+"/rooms/") if i.startswith("room")]
-
-#     if specific_files!=None:
-#         room_files = [f for f in room_files if i in specific_files]
-
-#     big_room_text = ""
-#     for rf in room_files:
-#         with open(path_to_prompts+"/rooms/"+rf,'r') as f:
-#             room_desc = f.read()
-#         big_room_text+=room_desc
-
-#     return(big_room_text)
-
-
 def get_current_room_text(room_id):
     with open(path_to_prompts+"/rooms/"+room_id+".txt",'r') as f:
         room_text = f.read()
@@ -42,11 +21,6 @@ def get_current_room_text(room_id):
 
 
 def get_user_data(user_name):
-    # try:
-    #     with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
-    #         user_data = f.read()
-    # except FileNotFoundError:
-    #     new_user.create_new_player_file(user_name)
     with open(path_to_prompts+"/player_data/"+user_name+".txt",'r') as f:
         user_data = f.read()
     return user_data
