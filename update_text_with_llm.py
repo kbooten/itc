@@ -2,7 +2,7 @@ import os
 
 # dynamic path
 module_dir = os.path.dirname(__file__) 
-path_to_prompts = os.path.join(module_dir, 'prompting/prompt_text')
+path_to_prompts = os.path.join(module_dir, 'prompt_text')
 
 
 from llm_interface import get_llm_response

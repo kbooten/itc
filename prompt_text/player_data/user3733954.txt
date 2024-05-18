@@ -1,0 +1,13 @@
+character:
+  health:
+    max_health: 100
+    current_health: 100
+  stats:
+    strength: 10
+    agility: 8
+  inventory:
+    items: []
+  skills:[]
+  status_effects: [] 
+  location: "room with petalite countertop filled with cooking equipment"
+  notes: "Notices a small compartment hidden beneath the counter after dancing among the cooking equipment"

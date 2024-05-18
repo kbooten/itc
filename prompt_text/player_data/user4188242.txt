@@ -1,0 +1,13 @@
+character:
+  health:
+    max_health: 100
+    current_health: 100
+  stats:
+    strength: 20
+    agility: 8
+  inventory:
+    items: [pots, pans]
+  skills:[]
+  status_effects: []
+
+The player has gained 2 strength by following one of the recipes on the petalite countertop. They also have pots and pans for use in cooking or creating fires.
