@@ -1,7 +1,7 @@
 import os
 
 module_dir = os.path.dirname(__file__)  # __file__ is a special variable of the module
-path_to_players = os.path.join(module_dir, 'prompting/prompt_text/player_data/')
+path_to_players = os.path.join(module_dir, 'prompt_text/player_data/')
 
 basic_character_yaml ="""character:
   health:

@@ -2,7 +2,7 @@ import os
 
 # dynamic path
 module_dir = os.path.dirname(__file__) 
-path_to_prompts = os.path.join(module_dir, 'prompting/prompt_text')
+path_to_prompts = os.path.join(module_dir, 'prompt_text')
 with open(path_to_prompts+"/room_movement_prompt.txt","r") as f:
     prompt = f.read()
 
