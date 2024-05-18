@@ -12,7 +12,7 @@ from little_utilities import get_current_room_of_player,update_player_room
 
 
 def fill_out_prompt(prompt,user_input,llm_response,payload):
-    prompt = prompt.replace('<<user_input>>>',user_input)
+    prompt = prompt.replace('<<user_input>>',user_input)
     prompt = prompt.replace('<<llm_response>>',llm_response)
     prompt = prompt.replace('<<payload>>',payload)
     return prompt
@@ -24,7 +24,8 @@ def maybe_move_to_new_room(user_name,user_input,llm_response,debug=False):
     file = path_to_prompts+"/rooms/"+room+".txt"
     with open(file,'r') as f:
         payload = f.read()    
-    prompt_filled = fill_out_prompt(prompt,user_input,llm_response,payload) 
+    prompt_filled = fill_out_prompt(prompt,user_input,llm_response,payload)
+    print(prompt_filled)
     response_from_llm = get_llm_response(prompt_filled)
     print(response_from_llm)
     if "!same!" in response_from_llm.lower():

@@ -8,4 +8,3 @@ doors:
     requirements:
       have_item: Magic Key
       task_completed: Solve Riddle
-

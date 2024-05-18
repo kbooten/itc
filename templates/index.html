@@ -20,56 +20,64 @@
     <script>
 
         function generateRandomId(length) {
-          let result = '';
-          for (let i = 0; i < length; i++) {
-            result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
-          }
-          return result;
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
+            }
+            return result;
+        }
+
+        function promptForUsername() {
+            let username = prompt("Enter your username:");
+            while (!username) {
+                username = prompt("Username cannot be empty. Please enter your username:");
+            }
+            return username;
         }
 
         (function() {
-          var id = localStorage.getItem("inside_the_castle_id");
-          if (!id) {
-            id = "user"+generateRandomId(7)
-            localStorage.setItem("inside_the_castle_id", id);
-          }
-          window.user_id = id; // This sets a global variable `myGlobalId`
+            var id = localStorage.getItem("inside_the_castle_id");
+            var username = localStorage.getItem("inside_the_castle_username");
+            if (!id) {
+                id = "user" + generateRandomId(7);
+                localStorage.setItem("inside_the_castle_id", id);
+            }
+            if (!username) {
+                username = promptForUsername();
+                localStorage.setItem("inside_the_castle_username", username);
+            }
+            window.user_id = id; // This sets a global variable `user_id`
+            window.username = username; // This sets a global variable `username`
         })();
                 
         document.addEventListener("DOMContentLoaded", function() {
-
-
             const textarea = document.getElementById("message");
             const button = document.querySelector("button");
             const msgArea = document.getElementById("messages");
 
-
-             // Handshake with the server
-             // send user id, get initial status
-              fetch("/handshake", {
+            // Handshake with the server
+            fetch("/handshake", {
                 method: "POST",
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'user_id=' + encodeURIComponent(user_id)
-              })
-              .then(response => response.json())
-              .then(data => {
+                body: 'user_id=' + encodeURIComponent(user_id) + '&user_name=' + encodeURIComponent(username)
+            })
+            .then(response => response.json())
+            .then(data => {
                 if (data.error) {
-                  console.error('Handshake error:', data.error);
+                    console.error('Handshake error:', data.error);
                 } else {
-                  console.log('Handshake successful:', data.message);
-                  msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
-                  msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                    console.log('Handshake successful:', data.message);
+                    msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
                 }
-              })
-              .catch(error => {
+            })
+            .catch(error => {
                 console.error('Handshake Fetch Error:', error);
-              });
+            });
 
-
-
-            // Function to handle typical sending input/receving output messages
+            // Function to handle typical sending input/receiving output messages
             function sendMessage() {
                 const message = textarea.value.trim();
                 if (!message) return; // Do nothing if the message is empty
@@ -84,7 +92,6 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id)
-                        
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -120,6 +127,4 @@
     </script>
 </body>
 </html>
-
-
 

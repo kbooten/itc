@@ -26,19 +26,24 @@ from write_to_google_sheet import append_data_to_google_sheet
 
 import time
 
+import json
+
+
 @auth.verify_password
 def verify_password(meta_username, password):
     if meta_username in users and users[meta_username] == password:
         return meta_username
 
-def process_input(user_text,user_name): ## this should be somewhere else!
-    llm_response =  get_llm_response(build_prompt(user_text,user_name)) ## this will create a new user but should refactor
-    room = get_current_room_of_player(user_name)
-    maybe_update_room(user_text,llm_response,room,debug=True)
-    maybe_update_character(user_text,llm_response,user_name,debug=True)
-    maybe_move_to_new_room(user_name,user_text,llm_response)
+def process_input(user_text,user_id): ## this should be somewhere else!
+    llm_response =  get_llm_response(build_prompt(user_text,user_id)) ## this will create a new user but should refactor
+    room = get_current_room_of_player(user_id)
+    maybe_update_room(user_text,llm_response,room,user_id=user_id)
+    maybe_update_character(user_text,llm_response,user_id)
+    maybe_move_to_new_room(user_id,user_text,llm_response)
     ## write to google
-    append_data_to_google_sheet([[int(time.time()),user_name,user_text,llm_response]])
+    with open('id2name.json','r') as f:
+        id2name = json.load(f)
+    append_data_to_google_sheet([[int(time.time()),user_id,id2name[user_id],user_text,llm_response]])
     return llm_response
 
 @app.route("/", methods=["GET"])
@@ -49,7 +54,8 @@ def index():
 @app.route("/handshake", methods=["POST"])
 def handshake():
     user_id = request.form.get("user_id")
-    new_user.maybe_create_new_player_file(user_id)
+    user_name = request.form.get("user_name")
+    new_user.maybe_create_new_player_file(user_id,user_name)
     response = process_input("Could you please tell me where I am and what I should do?",user_id)
     return jsonify({"user": "Server", "text": response})  # Return only the server's response
     return jsonify({"error": "No message received"})
