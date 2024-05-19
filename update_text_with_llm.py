@@ -8,18 +8,11 @@ path_to_prompts = os.path.join(module_dir, 'prompt_text')
 from llm_interface import get_llm_response
 
 
-# def fill_out_prompt(prompt,user_input,llm_response,payload,user_id=None):
-#     prompt = prompt.replace('<<user_input>>>',user_input)
-#     prompt = prompt.replace('<<llm_response>>',llm_response)
-#     prompt = prompt.replace('<<payload>>',payload)
-#     if user_id!=None:
-#         prompt = prompt.replace('<<user_id>>',user_id)
-#     return prompt
-
 def _get_contents_of_file(a_file):
     with open(a_file,'r') as f:
         payload = f.read()
     return payload
+
 
 def _maybe_update(prompt,file,debug=False):
     response_from_llm = get_llm_response(prompt)
@@ -48,7 +41,6 @@ def maybe_update_room(   user_input="grab Pavioni lever espresso machine and pla
     prompt = prompt.replace('<<payload>>',payload)
     if user_id!=None:
         prompt = prompt.replace('<<user_id>>',user_id)
-    print(prompt)
     _maybe_update(prompt,file,debug=debug)
 
 

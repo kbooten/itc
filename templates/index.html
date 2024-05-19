@@ -37,17 +37,11 @@
 
         (function() {
             var id = localStorage.getItem("inside_the_castle_id");
-            var username = localStorage.getItem("inside_the_castle_username");
             if (!id) {
-                id = "user" + generateRandomId(7);
+                var id_with_name = promptForUsername()+"_"+generateRandomId(7);
                 localStorage.setItem("inside_the_castle_id", id);
             }
-            if (!username) {
-                username = promptForUsername();
-                localStorage.setItem("inside_the_castle_username", username);
-            }
-            window.user_id = id; // This sets a global variable `user_id`
-            window.username = username; // This sets a global variable `username`
+            window.user_id = id_with_name; // This sets a global variable `user_id`
         })();
                 
         document.addEventListener("DOMContentLoaded", function() {
@@ -61,7 +55,7 @@
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'user_id=' + encodeURIComponent(user_id) + '&user_name=' + encodeURIComponent(username)
+                body: 'user_id=' + encodeURIComponent(user_id)
             })
             .then(response => response.json())
             .then(data => {

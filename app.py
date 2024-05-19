@@ -18,7 +18,7 @@ from update_text_with_llm import maybe_update_room, maybe_update_character
 
 from move_to_new_room import maybe_move_to_new_room
 
-from little_utilities import get_current_room_of_player
+from little_utilities import get_current_room_of_player, replace_player_id_with_name
 
 import new_user 
 
@@ -41,10 +41,9 @@ def process_input(user_text,user_id): ## this should be somewhere else!
     maybe_update_character(user_text,llm_response,user_id)
     maybe_move_to_new_room(user_id,user_text,llm_response)
     ## write to google
-    with open('id2name.json','r') as f:
-        id2name = json.load(f)
-    append_data_to_google_sheet([[int(time.time()),user_id,id2name[user_id],user_text,llm_response]])
-    return llm_response
+    append_data_to_google_sheet([[int(time.time()),user_id,user_text,llm_response]])
+    llm_response_with_player_names = replace_player_id_with_name(llm_response)
+    return llm_response_with_player_names
 
 @app.route("/", methods=["GET"])
 @auth.login_required
@@ -54,8 +53,7 @@ def index():
 @app.route("/handshake", methods=["POST"])
 def handshake():
     user_id = request.form.get("user_id")
-    user_name = request.form.get("user_name")
-    new_user.maybe_create_new_player_file(user_id,user_name)
+    new_user.maybe_create_new_player_file(user_id)
     response = process_input("Could you please tell me where I am and what I should do?",user_id)
     return jsonify({"user": "Server", "text": response})  # Return only the server's response
     return jsonify({"error": "No message received"})

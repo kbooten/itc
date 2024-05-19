@@ -11,3 +11,13 @@ def update_player_room(user_name,room):
     player2room[user_name]=room
     with open('player2room.json','w') as f:
         json.dump(player2room,f)
+
+with open('id2name.json','r') as f:
+    id2player = json.load(f)
+
+def replace_player_id_with_name(text):
+    for player_id in id2player:
+        text = text.replace(player_id,"[USER:%s]" % id2player[player_id])
+    return text
+
+    

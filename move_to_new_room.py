@@ -1,7 +1,7 @@
 import os
 
 # dynamic path
-module_dir = os.path.dirname(__file__) 
+module_dir = os.path.dirname(__file__)
 path_to_prompts = os.path.join(module_dir, 'prompt_text')
 with open(path_to_prompts+"/room_movement_prompt.txt","r") as f:
     prompt = f.read()
@@ -23,11 +23,9 @@ def maybe_move_to_new_room(user_name,user_input,llm_response,debug=False):
     ## room description is payload
     file = path_to_prompts+"/rooms/"+room+".txt"
     with open(file,'r') as f:
-        payload = f.read()    
+        payload = f.read()
     prompt_filled = fill_out_prompt(prompt,user_input,llm_response,payload)
-    print(prompt_filled)
     response_from_llm = get_llm_response(prompt_filled)
-    print(response_from_llm)
     if "!same!" in response_from_llm.lower():
         pass
     else:
