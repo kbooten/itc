@@ -5,76 +5,42 @@
     <title>Chat with Server</title>
     <style>
         body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        #room-name { padding: 10px; background: #ccc; text-align: center; font-size: 1.5em; }
         #messages { flex-grow: 1; overflow-y: auto; padding: 10px; background: #f4f4f4; }
         #input-area { display: flex; padding: 10px; background: #ddd; }
         textarea { flex-grow: 1; margin-right: 10px; resize: none; height: 50px; }
         button { width: 100px; height: 50px; }
+        #back-button { margin: 10px; }
     </style>
 </head>
 <body>
+    <div id="room-name">Room: {{ room }}</div>
+    <button id="back-button" onclick="goBack()">Back to Room Selection</button>
     <div id="messages"></div>
     <div id="input-area">
         <textarea id="message" placeholder="Type here and press Enter to send" required></textarea>
         <button onclick="sendMessage()">Send</button>
     </div>
     <script>
-
-        function generateRandomId(length) {
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
-            }
-            return result;
+        function goBack() {
+            window.location.href = "{{ url_for('home') }}";
         }
 
-        function promptForUsername() {
-            let username = prompt("Enter your username:");
-            while (!username) {
-                username = prompt("Username cannot be empty. Please enter your username:");
-            }
-            return username;
-        }
-
-        (function() {
-            var id = localStorage.getItem("inside_the_castle_id");
-            if (!id) {
-                var id_with_name = promptForUsername()+"_"+generateRandomId(7);
-                localStorage.setItem("inside_the_castle_id", id);
-            }
-            window.user_id = id_with_name; // This sets a global variable `user_id`
-        })();
-                
         document.addEventListener("DOMContentLoaded", function() {
             const textarea = document.getElementById("message");
             const button = document.querySelector("button");
             const msgArea = document.getElementById("messages");
 
-            // Handshake with the server
-            fetch("/handshake", {
-                method: "POST",
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'user_id=' + encodeURIComponent(user_id)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Handshake error:', data.error);
-                } else {
-                    console.log('Handshake successful:', data.message);
-                    msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
-                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                }
-            })
-            .catch(error => {
-                console.error('Handshake Fetch Error:', error);
-            });
-
             // Function to handle typical sending input/receiving output messages
             function sendMessage() {
                 const message = textarea.value.trim();
                 if (!message) return; // Do nothing if the message is empty
+
+                const user_id = localStorage.getItem("inside_the_castle_id");
+                if (!user_id) {
+                    alert('User ID not found. Please go back to the room selection.');
+                    return;
+                }
 
                 textarea.disabled = true; // Disable textarea during send
                 button.disabled = true; // Disable button during send
@@ -121,4 +87,5 @@
     </script>
 </body>
 </html>
+
 

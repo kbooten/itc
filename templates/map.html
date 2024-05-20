@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a Room</title>
+</head>
+<body>
+    <h1>Select a Room</h1>
+    <ul>
+        {% for room in rooms %}
+        <li>
+            <form action="{{ url_for('select_room') }}" method="post" class="room-form">
+                <input type="hidden" name="user_id" class="user-id-input">
+                <button type="submit" name="room" value="{{ room }}">{{ room }}</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function generateRandomId(length) {
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
+            }
+            return result;
+        }
+
+        function promptForUsernameAndEmail() {
+            let username = prompt("Enter your username:");
+            while (!username) {
+                username = prompt("Username cannot be empty. Please enter your username:");
+            }
+            let email = prompt("Enter your email:");
+            while (!email) {
+                email = prompt("Email cannot be empty. Please enter your email:");
+            }
+            return { username, email };
+        }
+
+        (function() {
+            var id = localStorage.getItem("inside_the_castle_id");
+            if (!id) {
+                var { username, email } = promptForUsernameAndEmail();
+                var id_with_name = username + "_" + generateRandomId(7);
+                localStorage.setItem("inside_the_castle_id", id_with_name);
+                window.user_id = id_with_name;
+
+                // Handshake with the server
+                fetch("/handshake", {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'user_id=' + encodeURIComponent(user_id) + '&email=' + encodeURIComponent(email)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Handshake error:', data.error);
+                    } else {
+                        console.log('Handshake successful:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Handshake Fetch Error:', error);
+                });
+            } else {
+                window.user_id = id;
+            }
+
+            // Set the user ID in the hidden input field before form submission
+            document.querySelectorAll('.room-form').forEach(form => {
+                form.addEventListener('submit', function() {
+                    const userIdInput = form.querySelector('.user-id-input');
+                    userIdInput.value = window.user_id;
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
+
