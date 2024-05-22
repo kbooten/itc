@@ -10,6 +10,14 @@ module_dir = os.path.dirname(__file__)
 path_to_prompts = os.path.join(module_dir, 'prompt_text/rooms/')
 
 
+path_to_users = os.path.join(module_dir, 'prompt_text/player_data/')
+
+
+os.mkdir(path_to_prompts)
+os.mkdir(path_to_users)
+
+
+
 room_yaml = """public_description: >
   <<public>>. 
 secret_description: >
