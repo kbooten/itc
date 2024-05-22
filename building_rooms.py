@@ -12,6 +12,7 @@ path_to_prompts = os.path.join(module_dir, 'prompt_text/rooms/')
 
 #path_to_users = os.path.join(module_dir, 'prompt_text/player_data/')
 
+#[x[0] for x in os.walk(directory)]
 
 # os.mkdir(path_to_prompts)
 # os.mkdir(path_to_users)
