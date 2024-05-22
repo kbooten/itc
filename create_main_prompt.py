@@ -6,10 +6,6 @@ module_dir = os.path.dirname(__file__)
 path_to_prompts = os.path.join(module_dir, 'prompt_text')
 
 
-
-from little_utilities import get_current_room_of_player
-
-
 def get_main_prompt():
     with open(path_to_prompts+"/main_game_prompt.txt",'r') as f:
         main_prompt = f.read()
@@ -35,7 +31,6 @@ def get_user_data(user_name):
 
 def build_prompt(user_input="what can I do?",user_name="test",room_id="room0"):
     main_prompt = get_main_prompt()
-    room_id = get_current_room_of_player(user_name)
     room_text = get_current_room_text(room_id)
     room_voice = get_current_room_text_voice(room_id)
     user_data  =get_user_data(user_name)

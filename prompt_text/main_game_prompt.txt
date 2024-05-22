@@ -29,7 +29,7 @@ If the player seems to have changed rooms by successfully moving through a door,
 
 -------
 
-Ok, those were your instructions.  Reply to the user's input below:
+Ok, those were your instructions.  Return GAME_OUTPUT in response to the USER_INPUT based on these other data and instructions:
 
 CURRENT_ROOM_DESCRIPTION:
 

@@ -11,19 +11,170 @@
         textarea { flex-grow: 1; margin-right: 10px; resize: none; height: 50px; }
         button { width: 100px; height: 50px; }
         #back-button { margin: 10px; }
+
+        /* Pop-up styles */
+        #popup { 
+            display: none; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 300px; 
+            height: 200px; 
+            background: #fff; 
+            border: 1px solid #ccc; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            z-index: 1000; 
+        }
+        #popup-header { 
+            padding: 10px; 
+            background: #ccc; 
+            text-align: right; 
+        }
+        #popup-content { 
+            padding: 10px; 
+            height: 150px; 
+            overflow-y: auto; 
+        }
     </style>
 </head>
 <body>
-    <div id="room-name">Room: {{ room }}</div>
+    <div id="room-name">{{ room_info.author }}: {{ room_info.title }}</div>
     <button id="back-button" onclick="goBack()">Back to Room Selection</button>
+    <button id="popup-button" onclick="openPopup()">Open Pop-up</button>
     <div id="messages"></div>
     <div id="input-area">
         <textarea id="message" placeholder="Type here and press Enter to send" required></textarea>
         <button onclick="sendMessage()">Send</button>
     </div>
+
+    <!-- Pop-up structure -->
+    <div id="popup">
+        <div id="popup-header">
+            <button onclick="closePopup()">Close</button>
+        </div>
+        <div id="popup-content"></div>
+    </div>
+
     <script>
+        let intermittentTimer;
+
         function goBack() {
             window.location.href = "{{ url_for('home') }}";
+        }
+
+        function openPopup() {
+            const popup = document.getElementById('popup');
+            const popupContent = document.getElementById('popup-content');
+            const user_id = localStorage.getItem("inside_the_castle_id");
+            
+            if (!user_id) {
+                alert('User ID not found. Please go back to the room selection.');
+                return;
+            }
+
+            popup.style.display = 'block';
+
+            // Fetch data from the backend
+            fetch('/fetch_user_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + encodeURIComponent(user_id)
+            })
+            .then(response => response.text())
+            .then(data => {
+                popupContent.innerText = data;
+            })
+            .catch(error => {
+                popupContent.innerText = 'Error fetching data';
+                console.error('Error:', error);
+            });
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function startIntermittentTimer() {
+            // Clear any existing timer
+            clearTimeout(intermittentTimer);
+
+            // Set a new timer with a random interval between 30 seconds (30000ms) and 3 minutes (180000ms)
+            const interval = Math.random() * (180000 - 30000) + 30000;
+            console.log(`Next intermittent request in ${interval} ms`);
+
+            intermittentTimer = setTimeout(() => {
+                sendIntervalMessage();
+            }, interval);
+        }
+
+        function sendDefaultMessage() {
+            const user_id = localStorage.getItem("inside_the_castle_id");
+            if (!user_id) {
+                console.error('User ID not found. Default message not sent.');
+                return;
+            }
+
+            fetch("/send_message", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message=' + encodeURIComponent("I look around") + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    alert(data.error);
+                } else {
+                    const msgArea = document.getElementById("messages");
+                    msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert('An error occurred. Please check the console for details.');
+            })
+            .finally(() => {
+                startIntermittentTimer(); // Start the intermittent timer after the default message
+            });
+        }
+
+        function sendIntervalMessage() {
+            const user_id = localStorage.getItem("inside_the_castle_id");
+            if (!user_id) {
+                console.error('User ID not found. Interval message not sent.');
+                return;
+            }
+
+            fetch("/send_message", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message=' + encodeURIComponent("[[time has passed]]") + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    alert(data.error);
+                } else {
+                    const msgArea = document.getElementById("messages");
+                    msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert('An error occurred. Please check the console for details.');
+            })
+            .finally(() => {
+                startIntermittentTimer(); // Reset the intermittent timer after the interval message
+            });
         }
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -31,7 +182,6 @@
             const button = document.querySelector("button");
             const msgArea = document.getElementById("messages");
 
-            // Function to handle typical sending input/receiving output messages
             function sendMessage() {
                 const message = textarea.value.trim();
                 if (!message) return; // Do nothing if the message is empty
@@ -51,7 +201,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id)
+                    body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -73,16 +223,18 @@
                     button.disabled = false; // Re-enable button after response
                     textarea.value = ""; // Clear input after sending
                     textarea.focus(); // Focus textarea ready for next message
+                    startIntermittentTimer(); // Reset the intermittent timer
                 });
             }
 
-            // Listen for Enter key press to send message
             textarea.addEventListener("keydown", function(event) {
                 if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault(); // Prevent the default action (new line)
                     sendMessage(); // Call function to send message
                 }
             });
+
+            sendDefaultMessage(); // Send the default message when the page loads
         });
     </script>
 </body>

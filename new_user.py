@@ -31,7 +31,7 @@ def create_new_user(user_id,email):
   ## new player location (set to none)
   with open('player2room.json','r') as f:
     player2room = json.load(f)
-  player2room[user_id]=""
+  player2room[user_id]=None
   with open('player2room.json','w') as f:
     json.dump(player2room,f)
   ## new player yaml

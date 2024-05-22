@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select a Room</title>
+    <style>
+        .room-div {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+        }
+        .room-div:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
     <h1>Select a Room</h1>
     <ul>
         {% for room in rooms %}
         <li>
-            <form action="{{ url_for('select_room') }}" method="post" class="room-form">
-                <input type="hidden" name="user_id" class="user-id-input">
-                <button type="submit" name="room" value="{{ room }}">{{ room }}</button>
-            </form>
+            <div class="room-div" data-room-id="{{ room.id }}">
+                {{ room.author }}: {{ room.title }}
+            </div>
         </li>
         {% endfor %}
     </ul>
@@ -22,7 +32,7 @@
         function generateRandomId(length) {
             let result = '';
             for (let i = 0; i < length; i++) {
-                result += Math.floor(Math.random() * 10); // Generate a random digit and add to result
+                result += Math.floor(Math.random() * 10);
             }
             return result;
         }
@@ -47,11 +57,10 @@
                 localStorage.setItem("inside_the_castle_id", id_with_name);
                 window.user_id = id_with_name;
 
-                // Handshake with the server
                 fetch("/handshake", {
                     method: "POST",
                     headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: 'user_id=' + encodeURIComponent(user_id) + '&email=' + encodeURIComponent(email)
                 })
@@ -70,11 +79,25 @@
                 window.user_id = id;
             }
 
-            // Set the user ID in the hidden input field before form submission
-            document.querySelectorAll('.room-form').forEach(form => {
-                form.addEventListener('submit', function() {
-                    const userIdInput = form.querySelector('.user-id-input');
-                    userIdInput.value = window.user_id;
+            document.querySelectorAll('.room-div').forEach(div => {
+                div.addEventListener('click', function() {
+                    const roomId = div.getAttribute('data-room-id');
+                    const userId = window.user_id;
+                    fetch("{{ url_for('select_room') }}", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'user_id=' + encodeURIComponent(userId) + '&room_id=' + encodeURIComponent(roomId)
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        console.error('Room selection Fetch Error:', error);
+                    });
                 });
             });
         })();
