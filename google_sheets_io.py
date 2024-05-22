@@ -19,7 +19,7 @@ creds = service_account.Credentials.from_service_account_info(creds_json)
 
 service = build('sheets', 'v4', credentials=creds)
 
-def append_data_to_google_sheet(values, service=service, range_name='Sheet1!A1'):
+def append_data_to_google_sheet(values, service=service, range_name='interactions!A1'):
     body = {
         'values': values
     }
@@ -30,5 +30,9 @@ def append_data_to_google_sheet(values, service=service, range_name='Sheet1!A1')
                                        .get('updates') \
                                        .get('updatedCells')))
 
-data_to_append = [["example user id","example user input", "example reply",int(time.time())],]
-append_data_to_google_sheet(data_to_append)
+def main():
+    data_to_append = [["example user id","example user input", "example reply",int(time.time())],]
+    append_data_to_google_sheet(data_to_append)
+
+if __name__ == '__main__':
+    main()
