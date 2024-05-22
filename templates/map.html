@@ -51,33 +51,34 @@
 
         (function() {
             var id = localStorage.getItem("inside_the_castle_id");
+            let email = "";
             if (!id) {
                 var { username, email } = promptForUsernameAndEmail();
                 var id_with_name = username + "_" + generateRandomId(7);
                 localStorage.setItem("inside_the_castle_id", id_with_name);
                 window.user_id = id_with_name;
-
-                fetch("/handshake", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'user_id=' + encodeURIComponent(user_id) + '&email=' + encodeURIComponent(email)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Handshake error:', data.error);
-                    } else {
-                        console.log('Handshake successful:', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Handshake Fetch Error:', error);
-                });
             } else {
                 window.user_id = id;
             }
+
+            fetch("/handshake", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + encodeURIComponent(window.user_id) + '&email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Handshake error:', data.error);
+                } else {
+                    console.log('Handshake successful:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Handshake Fetch Error:', error);
+            });
 
             document.querySelectorAll('.room-div').forEach(div => {
                 div.addEventListener('click', function() {

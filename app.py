@@ -96,11 +96,11 @@ def select_room():
 @app.route('/handshake', methods=['POST'])
 def handshake():
     user_id = request.form.get('user_id')
-    email = request.form.get('email')
+    email = request.form.get('email', "")
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     print(f'New user handshake: {user_id}')
-    new_user.create_new_user(user_id, email)
+    new_user.maybe_create_new_user(user_id, email)
     return jsonify({'message': 'Handshake successful', 'text': 'Welcome!'})
 
 

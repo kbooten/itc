@@ -17,7 +17,7 @@ basic_character_yaml ="""character:
   status_effects: []"""
 
 
-def create_new_user(user_id,email):
+def maybe_create_new_user(user_id,email):
   """
   create a new player with a character (with location and attributes/inventory yaml)
   but don't overwrite
@@ -25,18 +25,22 @@ def create_new_user(user_id,email):
   ## new
   with open('id2email.json','r') as f:
     id2email = json.load(f)
-  id2email[user_id]=email
-  with open('id2email.json','w') as f:
-    json.dump(id2email,f)
-  ## new player location (set to none)
-  with open('player2room.json','r') as f:
-    player2room = json.load(f)
-  player2room[user_id]=None
-  with open('player2room.json','w') as f:
-    json.dump(player2room,f)
-  ## new player yaml
-  with open(path_to_players+user_id+".txt",'w') as f:
-    f.write(basic_character_yaml)
+  if user_id in id2email:
+    return False ## already exists returns False, probably won't care about this bool
+  else:
+    id2email[user_id]=email
+    with open('id2email.json','w') as f:
+      json.dump(id2email,f)
+    ## new player location (set to none)
+    with open('player2room.json','r') as f:
+      player2room = json.load(f)
+    player2room[user_id]=None
+    with open('player2room.json','w') as f:
+      json.dump(player2room,f)
+    ## new player yaml
+    with open(path_to_players+user_id+".txt",'w') as f:
+      f.write(basic_character_yaml)
+    return True ## created new
 
 
 def main():
