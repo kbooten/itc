@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: itc
+    env: python
+    buildCommand: pip install -r requirements.txt ; python reinit.py ; python building_rooms.py
+    startCommand: python app.py
+    plan: starter
+    region: oregon
+
+jobs:
+  - name: upload-rooms
+    schedule: "*/10 * * * *"
+    command: write_rooms_to_google_sheets.py
