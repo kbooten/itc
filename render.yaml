@@ -6,8 +6,7 @@ services:
     startCommand: python app.py
     plan: starter
     region: oregon
-
-cron:
-  - name: upload-rooms
+  - type: cron
+    name: upload-rooms
     schedule: "*/10 * * * *"
     command: write_rooms_to_google_sheets.py
