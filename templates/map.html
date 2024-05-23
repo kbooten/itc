@@ -4,20 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select a Room</title>
-    <style>
-        .room-div {
-            cursor: pointer;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin: 5px 0;
-        }
-        .room-div:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Select a Room</h1>
+    <h1>Inside the Castle</h1>
     <ul>
         {% for room in rooms %}
         <li>
@@ -29,37 +19,44 @@
     </ul>
 
     <script>
-        function generateRandomId(length) {
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += Math.floor(Math.random() * 10);
-            }
-            return result;
-        }
+        document.addEventListener("DOMContentLoaded", function() {
 
-        function promptForUsernameAndEmail() {
-            let username = prompt("Enter your username:");
-            while (!username) {
-                username = prompt("Username cannot be empty. Please enter your username:");
+            function generateRandomId(length) {
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += Math.floor(Math.random() * 10);
+                }
+                return result;
             }
-            let email = prompt("Enter your email:");
-            while (!email) {
-                email = prompt("Email cannot be empty. Please enter your email:");
-            }
-            return { username, email };
-        }
 
-        (function() {
+            function promptForUsernameAndEmail() {
+                let username = prompt("Enter your username:");
+                while (!username) {
+                    username = prompt("Username cannot be empty. Please enter your username:");
+                }
+                let email = prompt("Enter your email:");
+                while (!email) {
+                    email = prompt("Email cannot be empty. Please enter your email:");
+                }
+                return { username, email };
+            }
+
+            console.log("Initializing script...");
             var id = localStorage.getItem("inside_the_castle_id");
-            let email = "";
+            let email = ""; // Declare email here
+
             if (!id) {
-                var { username, email } = promptForUsernameAndEmail();
+                let userInfo = promptForUsernameAndEmail(); // Get username and email
+                let username = userInfo.username;
+                email = userInfo.email; // Assign email here
                 var id_with_name = username + "_" + generateRandomId(7);
                 localStorage.setItem("inside_the_castle_id", id_with_name);
                 window.user_id = id_with_name;
             } else {
                 window.user_id = id;
             }
+
+            console.log("Performing handshake with user_id:", window.user_id);
 
             fetch("/handshake", {
                 method: "POST",
@@ -81,9 +78,12 @@
             });
 
             document.querySelectorAll('.room-div').forEach(div => {
+                console.log("Adding click listener to room:", div.getAttribute('data-room-id'));
                 div.addEventListener('click', function() {
                     const roomId = div.getAttribute('data-room-id');
                     const userId = window.user_id;
+                    console.log("Room clicked. Room ID:", roomId, "User ID:", userId);
+
                     fetch("{{ url_for('select_room') }}", {
                         method: "POST",
                         headers: {
@@ -91,8 +91,14 @@
                         },
                         body: 'user_id=' + encodeURIComponent(userId) + '&room_id=' + encodeURIComponent(roomId)
                     })
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
                     .then(html => {
+                        console.log('Received HTML:', html);
                         document.write(html);
                         document.close();
                     })
@@ -101,8 +107,7 @@
                     });
                 });
             });
-        })();
+        });
     </script>
 </body>
 </html>
-

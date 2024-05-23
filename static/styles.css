@@ -1,0 +1,97 @@
+/* styles.css */
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Room selection page styles */
+.room-div {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    transition: background-color 0.3s ease;
+}
+
+.room-div:hover {
+    background-color: #f0f0f0;
+}
+
+/* Chat page styles */
+#room-name {
+    padding: 10px;
+    background: #ccc;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f4f4f4;
+}
+
+#input-area {
+    display: flex;
+    padding: 10px;
+    background: #ddd;
+}
+
+textarea {
+    flex-grow: 1;
+    margin-right: 10px;
+    resize: none;
+    height: 50px;
+}
+
+button {
+    width: 100px;
+    height: 50px;
+}
+
+#back-button {
+    margin: 10px;
+}
+
+/* Pop-up styles */
+#popup { 
+    display: none; 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 300px; 
+    height: 200px; 
+    background: #fff; 
+    border: 1px solid #ccc; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+    z-index: 1000; 
+}
+
+#popup-header { 
+    padding: 10px; 
+    background: #ccc; 
+    text-align: right; 
+}
+
+#popup-content { 
+    padding: 10px; 
+    height: 150px; 
+    overflow-y: auto; 
+}
