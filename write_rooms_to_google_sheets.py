@@ -19,6 +19,7 @@ def main():
 	# Load room information
 	with open('room_id2room_title_author.json', 'r') as f:
 	    room_id2title_author = json.load(f)
+	print(room_id2title_author)
 
 
 	room_info_to_write = [[current_timestamp, k, v["title"], v["author"], get_current_room_desc(k)] for k, v in room_id2title_author.items()]
