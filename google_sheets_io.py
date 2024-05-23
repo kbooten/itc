@@ -4,12 +4,6 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 
-
-import time
-
-# Get the current Unix timestamp
-current_timestamp = int(time.time())
-
 # Get the JSON string from the environment variable
 from dotenv import load_dotenv
 load_dotenv()  # This will load environment variables from a .env file if present

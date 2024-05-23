@@ -4,7 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select a Room</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+            border-bottom: 2px dotted #fff;
+            transform: skewY(-3deg) rotateZ(-2deg);
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        .room-div {
+            padding: 15px;
+            background-color: #fff;
+            border: 2px dotted #000;
+            cursor: pointer;
+            transform: skewY(calc(var(--skew, 0deg))) rotateZ(calc(var(--rotate, 0deg)));
+            transition: transform 0.3s ease;
+        }
+
+        .room-div:hover {
+            background-color: #f0f0f0;
+        }
+
+        @keyframes randomSkew {
+            0% {
+                --skew: 1deg;
+                --rotate: 1deg;
+            }
+            100% {
+                --skew: -1deg;
+                --rotate: -1deg;
+            }
+        }
+
+        .room-div {
+            animation: randomSkew 1s infinite alternate;
+        }
+    </style>
 </head>
 <body>
     <h1>Inside the Castle</h1>
@@ -20,7 +78,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
             function generateRandomId(length) {
                 let result = '';
                 for (let i = 0; i < length; i++) {
@@ -111,3 +168,4 @@
     </script>
 </body>
 </html>
+

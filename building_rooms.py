@@ -36,7 +36,7 @@ In responding to the user, it is very important that you obey these stylistic co
 
 imit_temp="""
 
-In responding to the user, you should <<also>>try your best to imitate the following sample of text:
+In responding to the user, you should try your best to imitate the following sample of text:
 
 "<<imit>>"
 
@@ -56,7 +56,7 @@ def build_style_instruction(style,imit,backup=backup):
 	if style!=None:
 		return style_temp.replace("<<style>>",style)
 	if imit!=None:
-		imit_temp.replace("<<imit>>",imit)
+		return imit_temp.replace("<<imit>>",imit)
 	else:
 		return backup
 

@@ -8,7 +8,7 @@ import threading ## for rewriting
 from create_main_prompt import build_prompt
 from llm_interface import get_llm_response
 from update_text_with_llm import maybe_update_room, maybe_update_character, maybe_remove_person_from_room
-from little_utilities import look_up_email, update_player_room, get_room_author_title, room_player_is_in
+from little_utilities import look_up_email, update_player_room, get_room_author_title, room_player_is_in, user_id2yaml
 import new_user 
 from google_sheets_io import append_data_to_google_sheet
 import building_rooms
@@ -17,6 +17,12 @@ import building_rooms
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
+
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+import datetime
+
+import write_rooms_to_google_sheets
 
 # Users for basic auth
 users = {
@@ -107,8 +113,7 @@ def handshake():
 @app.route('/fetch_user_data', methods=['POST'])
 def fetch_user_data():
     user_id = request.form.get('user_id')
-
-    return user_id
+    return user_id2yaml(user_id)
 
 @app.route("/send_message", methods=["POST"])
 def send_message():
@@ -121,5 +126,16 @@ def send_message():
     return jsonify({"error": "No message received"})
 
 
+def scheduled_task():
+    write_rooms_to_google_sheets.write()
+    print(f"Scheduled task (writing rooms to sheets) executed at {datetime.datetime.now()}")
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=3)
+    scheduler.start()
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
+
+    app.run(debug=True,use_reloader=False)

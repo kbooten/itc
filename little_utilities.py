@@ -25,3 +25,13 @@ def room_player_is_in(user_id):
     else:
         return None
 
+
+import os
+
+
+def user_id2yaml(user_id):
+    module_dir = os.path.dirname(__file__)  # __file__ is a special variable of the module
+    path_to_players = os.path.join(module_dir, 'prompt_text/player_data/')
+    with open(path_to_players+user_id+".txt",'r') as f:
+        yaml = f.read()
+    return yaml

@@ -12,7 +12,7 @@ def get_current_room_desc(room_id):
 	return room_desc
 
 
-def main():
+def write():
 	import time
 	current_timestamp = int(time.time())
 
@@ -21,13 +21,13 @@ def main():
 	    room_id2title_author = json.load(f)
 	print(room_id2title_author)
 
-
 	room_info_to_write = [[current_timestamp, k, v["title"], v["author"], get_current_room_desc(k)] for k, v in room_id2title_author.items()]
 	append_data_to_google_sheet(room_info_to_write,range_name='updated_rooms!A1')
 	print("wrote rooms to google")
 
 
-
+def main():
+	write()
 
 if __name__ == '__main__':
 	main()

@@ -57,6 +57,9 @@ def reinit():
 	with open('player2room.json','w') as f:
 		json.dump({},f)
 
+	with open('room_id2room_title_author.json','w') as f:
+		json.dump({},f)
+
 	remove_user_files()
 	remove_room_files()
 
