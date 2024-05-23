@@ -7,7 +7,7 @@ services:
     plan: starter
     region: oregon
 
-jobs:
+cron:
   - name: upload-rooms
     schedule: "*/10 * * * *"
     command: write_rooms_to_google_sheets.py
