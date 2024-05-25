@@ -272,7 +272,7 @@
                     alert(data.error);
                 } else {
                     const msgArea = document.getElementById("messages");
-                    msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
+                    msgArea.innerHTML += `<div><strong>Room:</strong> ${data.text}</div>`;
                     msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
                 }
             })
