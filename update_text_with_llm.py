@@ -31,7 +31,7 @@ def maybe_update_field_yaml(user_input,llm_response,history):
     prompt = prompt.replace('<<user_input>>',user_input)
     prompt = prompt.replace('<<llm_response>>',llm_response)
     prompt = prompt.replace('<<field_yaml>>',field_yaml)
-    prompt = prompt.replace('<<history>>',field_yaml)
+    prompt = prompt.replace('<<history>>',history)
     return _maybe_update(prompt,file)
 
 

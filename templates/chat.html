@@ -4,138 +4,158 @@
     <meta charset="UTF-8">
     <title>Same, Kansas</title>
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        background-color: #fff;
-        color: #000;
-    }
 
-    #header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background-color: #000;
-        color: #fff;
-        border-bottom: 2px dotted #fff;
-        transform: skewY(-3deg) rotateZ(-2deg);
-        z-index: 2000;
-    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #fff;
+    color: #000;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
 
-    #header-left, #header-right {
-        display: flex;
-        align-items: center;
-    }
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border-bottom: 2px dotted #fff;
+    transform: skewY(-3deg) rotateZ(-2deg);
+    z-index: 2000;
+    width: calc(100% + 20px); /* Extend the width beyond the viewport */
+    margin-left: -10px; /* Negative margin to offset the extra width */
+    box-sizing: border-box;
+}
 
-    #header-left button, #header-right button {
-        padding: 10px 20px;
-        background-color: #fff;
-        color: #000;
-        border: 2px dotted #000;
-        cursor: pointer;
-        margin-left: 10px;
-        transform: skewY(3deg) rotateZ(2deg);
-    }
+#header-left, #header-right {
+    display: flex;
+    align-items: center;
+}
 
-    #room-name {
-        flex-grow: 1;
-        text-align: center;
-        transform: skewY(2deg) rotateZ(-1deg); /* Tilted slightly */
-    }
+#header-left button, #header-right button {
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #000;
+    border: 2px dotted #000;
+    cursor: pointer;
+    margin-left: 10px;
+    transform: skewY(3deg) rotateZ(2deg);
+}
 
-    #messages-container {
-        position: relative;
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        padding: 20px;
-        background-color: #fff;
-    }
+#room-name {
+    flex-grow: 1;
+    text-align: center;
+    transform: skewY(2deg) rotateZ(-1deg);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-    #messages {
-        width: 60%;
-        max-width: 800px;
-        border: 2px dotted #000;
-        overflow-y: auto;
-        padding: 20px;
-        transform: skewY(-2deg) rotateZ(-1deg);
-        position: relative; /* Ensure that helptext can be absolutely positioned relative to messages */
-    }
+#messages-container {
+    position: relative;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #fff;
+    overflow-y: auto; /* Ensure the container is scrollable if content overflows */
+}
 
-    #messages div {
-        margin-bottom: 15px;
-        transform: rotate(calc(var(--rotation, 0deg)));
-    }
+#messages {
+    width: 60%;
+    max-width: 800px;
+    border: 2px dotted #000;
+    overflow-y: auto;
+    padding: 20px;
+    transform: skewY(-2deg) rotateZ(-1deg);
+    position: relative;
+    box-sizing: border-box;
+}
 
-    #helptext {
-        position: absolute;
-        top: 50%;
-        right: -14px; /* Adjust this value to position the text a bit from the right edge */
-        transform: rotate(87deg) translateY(-50%);
-        transform-origin: center;
-        color: #5df542;
-        font-size: 14px;
-        font-weight: bold;
-        white-space: nowrap;
-        z-index: 1; /* Ensure it is on top */
-    }
+#messages div {
+    margin-bottom: 15px;
+    transform: rotate(calc(var(--rotation, 0deg)));
+}
+
+#helptext {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: rotate(87deg) translateY(-50%);
+    transform-origin: center;
+    color: #5df542;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+#input-area {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Align items vertically */
+    padding: 10px;
+    background-color: #000;
+    border-top: 2px dotted #fff; /* Add a dotted border at the top */
+    transform: skewY(2deg) rotateZ(1deg);
+    width: calc(100% + 20px); /* Extend the width beyond the viewport */
+    margin-left: -10px; /* Negative margin to offset the extra width */
+    box-sizing: border-box;
+    height: 80px; /* Fix height to prevent hanging off the bottom */
+    position: relative; /* Ensure it stays within the viewport */
+}
+
+#message {
+    width: 60%;
+    max-width: 800px;
+    height: 50px;
+    padding: 10px;
+    border: 2px dotted #000;
+    background-color: #fff;
+    color: #000;
+    transform: skewY(-2deg) rotateZ(-1deg);
+    box-sizing: border-box;
+}
+
+#input-area button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #000;
+    border: 2px dotted #000;
+    cursor: pointer;
+    transform: skewY(-2deg) rotateZ(-1deg);
+    box-sizing: border-box;
+}
 
 
-    #input-area {
-        display: flex;
-        justify-content: center;
-        padding: 10px;
-        background-color: #000;
-        transform: skewY(2deg) rotateZ(1deg);
-    }
+/* Adding random rotations */
+#messages div:nth-child(odd) {
+    --rotation: 1deg;
+}
 
-    #message {
-        width: 60%;
-        max-width: 800px;
-        height: 50px;
-        padding: 10px;
-        border: 2px dotted #000;
-        background-color: #fff;
-        color: #000;
-        transform: skewY(-2deg) rotateZ(-1deg);
-    }
+#messages div:nth-child(even) {
+    --rotation: -1deg;
+}
 
-    #input-area button {
-        margin-left: 10px;
-        padding: 10px 20px;
-        background-color: #fff;
-        color: #000;
-        border: 2px dotted #000;
-        cursor: pointer;
-        transform: skewY(-2deg) rotateZ(-1deg);
-    }
+#send-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #000;
+    border: 2px dotted #000;
+    cursor: pointer;
+    transform: skewY(-2deg) rotateZ(-1deg);
+    box-sizing: border-box;
+    position: relative;
+    top: -38px; /* Move the button 10 pixels up */
+}
 
-    #popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) skewY(2deg) rotateZ(1deg);
-        background-color: #fff;
-        border: 2px dotted #000;
-        width: 50%;
-        max-width: 600px;
-        z-index: 1000;
-    }
-
-    /* Adding random rotations */
-    #messages div:nth-child(odd) {
-        --rotation: 1deg;
-    }
-
-    #messages div:nth-child(even) {
-        --rotation: -1deg;
-    }
     </style>
 </head>
 <body>
@@ -151,7 +171,7 @@
     </div>
     <div id="input-area">
         <textarea id="message" placeholder="try entering something like: Where am I?" required></textarea>
-        <button onclick="sendMessage()">Send</button>
+        <button id="send-button" onclick="sendMessage()">Send</button>
     </div>
     <script>
 /// initial character yaml
@@ -192,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function() {
         { text: "Try to make it incastellated.", multiplier: 3 },
         { text: "Oh, I forgot to mention: you can make SECRETS.", multiplier: 1 },
         { text: "You can say, e.g., Make a minidisk player.  Put it on the lip of the well.  The SECRET is that when you try to listen to it just plays static, unless the player has equipped cipher-stud-earrings, in which case play this message: VISIT WWW.INSIDETHECASTLE.ORG", multiplier: 3 },
-
     ];
     const finalDefaultMessage = "How can I help you today?";
 
@@ -286,6 +305,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (messageHistory.length > MAX_HISTORY * 2) {
                     messageHistory = messageHistory.slice(-MAX_HISTORY * 2); // Keep only the last n messages
                 }
+
+                // Update the textarea placeholder with the next default message
+                updateTextareaMessage();
             }
         })
         .catch(error => {
@@ -296,7 +318,6 @@ document.addEventListener("DOMContentLoaded", function() {
             textarea.disabled = false; // Re-enable textarea after response
             button.disabled = false; // Re-enable button after response
             textarea.value = ""; // Clear input after sending
-            textarea.placeholder = "Type here and press Enter to send"; // Update placeholder after first message
             textarea.focus(); // Focus textarea ready for next message
         });
     }
@@ -307,6 +328,23 @@ document.addEventListener("DOMContentLoaded", function() {
             sendMessage(); // Call function to send message
         }
     });
+
+    // Function to update the textarea with the next default message
+    function updateTextareaMessage() {
+        if (currentMessageIndex < defaultMessages.length) {
+            textarea.placeholder = defaultMessages[currentMessageIndex];
+            currentMessageIndex++;
+        } else {
+            textarea.placeholder = finalDefaultMessage;
+        }
+    }
+
+    // Initial placeholder setup
+    updateTextareaMessage();
+
+    // Display the initial message from SK
+    msgArea.innerHTML += `<div><strong>SK:</strong> woooosh, wooooosh</div>`;
+    messageHistory.push({ user: 'SK', text: "woooosh, wooooosh" });
 
     // Array of (time, some_text) pairs
     const helpTextUpdates = [
@@ -338,22 +376,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to update the textarea with the next default message
-    function updateTextareaMessage(index) {
-        if (index < defaultMessages.length) {
-            textarea.placeholder = defaultMessages[index];
-            setTimeout(() => {
-                updateTextareaMessage(index + 1);
-            }, 5000); // Update every 5 seconds
-        } else {
-            textarea.placeholder = finalDefaultMessage;
-        }
-    }
-
     // Start updating helptext
     updateHelpText(0);
-    // Start updating textarea messages
-    updateTextareaMessage(0);
 });
 
 

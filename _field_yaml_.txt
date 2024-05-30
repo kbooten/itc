@@ -1,3 +1,7 @@
+The yaml should be revised. 
+
+Updated yaml with the new information:
+
 field:
   objects:[]
   structures:
@@ -17,5 +21,6 @@ field:
       public_description: "A wall made of smooth grey stones, encircling the user completely."
       location: "around the user, about 5 feet away"
       secret_description: none
-
-I have updated the yaml to include the newly created wall structure around the user.
+    - name: extra structure
+      public_description: "There is more to this place than meets the eye."
+      location: "around the user"
