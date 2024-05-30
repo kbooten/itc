@@ -20,13 +20,16 @@ service = build('sheets', 'v4', credentials=creds)
 spreadsheetId="1_vH-JFTVr7VN6kKd0U_eJ7XEsRXvqOQ1vr9Eu-ciGSY"
 
 
-def read_rooms_from_google_sheet(service=service, range_name="original_rooms!A1:Z100"):
-    result = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId,
-        range=range_name
-    ).execute()
-    values = result.get('values', [])
-    return values
+import json
+
+import os
+
+def get_current_room_desc(room_id):
+    module_dir = os.path.dirname(__file__)  # __file__ is a special variable of the module
+    path_to_rooms = os.path.join(module_dir, 'prompt_text/rooms/')
+    with open(path_to_rooms+room_id+".txt",'r') as f:
+        room_desc = f.read()
+    return room_desc
 
 
 def append_data_to_google_sheet(values, service=service, range_name='interactions!A1'):
@@ -39,10 +42,21 @@ def append_data_to_google_sheet(values, service=service, range_name='interaction
     print('{0} cells appended.'.format(result \
                                        .get('updates') \
                                        .get('updatedCells')))
+
+
+def write_field_to_google_sheets():
+    import time
+    with open('_field_prose_.txt','r') as f:
+        field_prose = f.read()
+    with open('_field_yaml_.txt','r') as f:
+        field_yaml = f.read()
+    info_to_write = [[int(time.time()),field_prose,field_yaml]]
+    append_data_to_google_sheet(info_to_write,range_name='updated_field!A1')
+    print("wrote rooms to google")
+
+
 def main():
-    #data_to_append = [["example user id","example user input", "example reply",int(time.time())],]
-    #append_data_to_google_sheet(data_to_append)
-    print(read_data_from_google_sheet())
+    write_field_to_google_sheets.write()
 
 if __name__ == '__main__':
     main()

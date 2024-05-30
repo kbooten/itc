@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat with Server</title>
+    <title>Same, Kansas</title>
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -24,6 +24,7 @@
         color: #fff;
         border-bottom: 2px dotted #fff;
         transform: skewY(-3deg) rotateZ(-2deg);
+        z-index: 2000;
     }
 
     #header-left, #header-right {
@@ -44,25 +45,46 @@
     #room-name {
         flex-grow: 1;
         text-align: center;
-        transform: skewY(3deg) rotateZ(2deg);
+        transform: skewY(2deg) rotateZ(-1deg); /* Tilted slightly */
+    }
+
+    #messages-container {
+        position: relative;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        background-color: #fff;
     }
 
     #messages {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-        background-color: #fff;
-        margin: 20px auto;
         width: 60%;
         max-width: 800px;
         border: 2px dotted #000;
+        overflow-y: auto;
+        padding: 20px;
         transform: skewY(-2deg) rotateZ(-1deg);
+        position: relative; /* Ensure that helptext can be absolutely positioned relative to messages */
     }
 
     #messages div {
         margin-bottom: 15px;
         transform: rotate(calc(var(--rotation, 0deg)));
     }
+
+    #helptext {
+        position: absolute;
+        top: 50%;
+        right: -14px; /* Adjust this value to position the text a bit from the right edge */
+        transform: rotate(87deg) translateY(-50%);
+        transform-origin: center;
+        color: #5df542;
+        font-size: 14px;
+        font-weight: bold;
+        white-space: nowrap;
+        z-index: 1; /* Ensure it is on top */
+    }
+
 
     #input-area {
         display: flex;
@@ -106,29 +128,6 @@
         z-index: 1000;
     }
 
-    #popup-header {
-        display: flex;
-        justify-content: flex-end;
-        padding: 10px;
-        background-color: #000;
-        color: #fff;
-        border-bottom: 2px dotted #fff;
-        transform: skewY(-2deg) rotateZ(-1deg);
-    }
-
-    #popup-header button {
-        background-color: #fff;
-        color: #000;
-        border: 2px dotted #000;
-        cursor: pointer;
-        transform: skewY(2deg) rotateZ(1deg);
-    }
-
-    #popup-content {
-        padding: 20px;
-        transform: skewY(2deg) rotateZ(1deg);
-    }
-
     /* Adding random rotations */
     #messages div:nth-child(odd) {
         --rotation: 1deg;
@@ -141,211 +140,227 @@
 </head>
 <body>
     <div id="header">
-        <div id="header-left">
-            <button id="back-button" onclick="goBack()">Back to Room Selection</button>
-        </div>
-        <div id="room-name">{{ room_info.author }}: {{ room_info.title }}</div>
+        <div id="room-name">Same, Kansas</div>
         <div id="header-right">
             <button id="popup-button" onclick="openPopup()">Open Pop-up</button>
         </div>
     </div>
-    <div id="messages"></div>
+    <div id="messages-container">
+        <div id="messages"></div>
+        <div id="helptext">a multi-user Kansas brought to you by Inside the Castle</div>
+    </div>
     <div id="input-area">
-        <textarea id="message" placeholder="Type here and press Enter to send" required></textarea>
+        <textarea id="message" placeholder="try entering something like: Where am I?" required></textarea>
         <button onclick="sendMessage()">Send</button>
     </div>
-
-    <!-- Pop-up structure -->
-    <div id="popup">
-        <div id="popup-header">
-            <button onclick="closePopup()">Close</button>
-        </div>
-        <div id="popup-content"></div>
-    </div>
-
     <script>
-        let intermittentTimer;
+/// initial character yaml
+var yaml = `
+    character:
+      location: []
+      health:
+        max_health: 100
+        current_health: 100
+      stats:
+        strength: 10
+        agility: 8
+      inventory:
+        items: []
+      skills:
+        - power to create buildings and objects
+      status_effects: []
+    `;
 
-        function goBack() {
-            window.location.href = "{{ url_for('home') }}";
-        }
+document.addEventListener("DOMContentLoaded", function() {
+    const textarea = document.getElementById("message");
+    const button = document.querySelector("button");
+    const msgArea = document.getElementById("messages");
+    const helpText = document.getElementById("helptext");
 
-        function openPopup() {
-            const popup = document.getElementById('popup');
-            const popupContent = document.getElementById('popup-content');
-            const user_id = localStorage.getItem("inside_the_castle_id");
-            
-            if (!user_id) {
-                alert('User ID not found. Please go back to the room selection.');
-                return;
+    const MAX_HISTORY = 12; // Adjust the number of messages to store
+    let messageHistory = [];
+
+    const initialMessages = [
+        { text: "Try: Where am I?", multiplier: 1 },
+        { text: "Try to explore this world.", multiplier: 2 },
+        { text: "Oh, I forgot to mention: you can make things in this world.  Walls.  Rooms.  Other structures.  Other objects.", multiplier: 1 },
+        { text: "You can say, e.g., Make a wall around that well.", multiplier: 2 },
+        { text: "You can make an object, e.g., Make a minidisk player and put it on the lip of the well.", multiplier: 3 },
+        { text: "When making things, specific is better.", multiplier: 2 },
+        { text: "This is a multiplayer room.", multiplier: 2 },
+        { text: "Others will visit later, maybe, and move in what you have built.", multiplier: 2 },
+        { text: "Try to make it incastellated.", multiplier: 3 },
+        { text: "Oh, I forgot to mention: you can make SECRETS.", multiplier: 1 },
+        { text: "You can say, e.g., Make a minidisk player.  Put it on the lip of the well.  The SECRET is that when you try to listen to it just plays static, unless the player has equipped cipher-stud-earrings, in which case play this message: VISIT WWW.INSIDETHECASTLE.ORG", multiplier: 3 },
+
+    ];
+    const finalDefaultMessage = "How can I help you today?";
+
+    function generateRepeatedMessages(messages) {
+        let result = [];
+        for (const message of messages) {
+            for (let i = 0; i < message.multiplier; i++) {
+                result.push(message.text);
             }
+        }
+        return result;
+    }
 
-            popup.style.display = 'block';
+    const defaultMessages = generateRepeatedMessages(initialMessages);
+    let currentMessageIndex = 0;
 
-            // Fetch data from the backend
-            fetch('/fetch_user_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'user_id=' + encodeURIComponent(user_id)
-            })
-            .then(response => response.text())
-            .then(data => {
-                popupContent.innerText = data;
-            })
-            .catch(error => {
-                popupContent.innerText = 'Error fetching data';
-                console.error('Error:', error);
-            });
+    function generateRandomId(length) {
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += Math.floor(Math.random() * 10);
+        }
+        return result;
+    }
+
+    function promptForUsernameAndEmail() {
+        let username = prompt("Enter your username:");
+        while (!username) {
+            username = prompt("Username cannot be empty. Please enter your username:");
+        }
+        let email = prompt("Enter your email:");
+        while (!email) {
+            email = prompt("Email cannot be empty. Please enter your email:");
+        }
+        return { username, email };
+    }
+
+    var id = localStorage.getItem("inside_the_castle_id");
+    var email = localStorage.getItem("inside_the_castle_email");
+
+    if (!id || !email) { // no id or no email
+        let userInfo = promptForUsernameAndEmail(); // Get username and email
+        let username = userInfo.username;
+        email = userInfo.email; // Assign email here
+        var name_with_random_id = username + "_" + generateRandomId(7);
+        localStorage.setItem("inside_the_castle_id", name_with_random_id);
+        localStorage.setItem("inside_the_castle_email", email);
+        localStorage.setItem("inside_the_castle_user_yaml", yaml);
+        window.user_id = name_with_random_id;
+    } else {
+        window.user_id = id;
+        window.user_email = email;
+    }
+
+    function sendMessage() {
+        const message = textarea.value.trim();
+        if (!message) return; // Do nothing if the message is empty
+
+        const user_id = localStorage.getItem("inside_the_castle_id");
+        if (!user_id) {
+            alert('User ID not found. Please go back to the home page.');
+            return;
         }
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
+        let user_yaml = localStorage.getItem("inside_the_castle_user_yaml");
 
-        function startIntermittentTimer() {
-            // Clear any existing timer
-            clearTimeout(intermittentTimer);
+        textarea.disabled = true; // Disable textarea during send
+        button.disabled = true; // Disable button during send
 
-            // Set a new timer with a random interval between 30 seconds (30000ms) and 3 minutes (180000ms)
-            const interval = Math.random() * (180000 - 30000) + 30000;
-            console.log(`Next intermittent request in ${interval} ms`);
+        // Simulate sending the message
+        fetch("/send_message", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id) + '&user_email=' + encodeURIComponent(window.user_email) + '&user_yaml=' + encodeURIComponent(user_yaml) + '&history=' + encodeURIComponent(JSON.stringify(messageHistory))
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+                alert(data.error);
+            } else {
+                msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+                msgArea.innerHTML += `<div><strong>SK:</strong> ${data.text}</div>`;
+                msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                localStorage.setItem("inside_the_castle_user_yaml", data.user_yaml);
 
-            intermittentTimer = setTimeout(() => {
-                sendIntervalMessage();
-            }, interval);
-        }
-
-        function sendDefaultMessage() {
-            const user_id = localStorage.getItem("inside_the_castle_id");
-            if (!user_id) {
-                console.error('User ID not found. Default message not sent.');
-                return;
+                // Update message history
+                messageHistory.push({ user: 'You', text: message });
+                messageHistory.push({ user: 'SK', text: data.text });
+                if (messageHistory.length > MAX_HISTORY * 2) {
+                    messageHistory = messageHistory.slice(-MAX_HISTORY * 2); // Keep only the last n messages
+                }
             }
-
-            fetch("/send_message", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'message=' + encodeURIComponent("I look around") + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Error:', data.error);
-                    alert(data.error);
-                } else {
-                    const msgArea = document.getElementById("messages");
-                    msgArea.innerHTML += `<div><strong>Room:</strong> ${data.text}</div>`;
-                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                }
-            })
-            .catch(error => {
-                console.error('Fetch Error:', error);
-                alert('An error occurred. Please check the console for details.');
-            })
-            .finally(() => {
-                startIntermittentTimer(); // Start the intermittent timer after the default message
-            });
-        }
-
-        function sendIntervalMessage() {
-            const user_id = localStorage.getItem("inside_the_castle_id");
-            if (!user_id) {
-                console.error('User ID not found. Interval message not sent.');
-                return;
-            }
-
-            fetch("/send_message", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'message=' + encodeURIComponent("[[time has passed]]") + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Error:', data.error);
-                    alert(data.error);
-                } else {
-                    const msgArea = document.getElementById("messages");
-                    msgArea.innerHTML += `<div><strong>Room:</strong> ${data.text}</div>`;
-                    msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                }
-            })
-            .catch(error => {
-                console.error('Fetch Error:', error);
-                alert('An error occurred. Please check the console for details.');
-            })
-            .finally(() => {
-                startIntermittentTimer(); // Reset the intermittent timer after the interval message
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const textarea = document.getElementById("message");
-            const button = document.querySelector("button");
-            const msgArea = document.getElementById("messages");
-
-            function sendMessage() {
-                const message = textarea.value.trim();
-                if (!message) return; // Do nothing if the message is empty
-
-                const user_id = localStorage.getItem("inside_the_castle_id");
-                if (!user_id) {
-                    alert('User ID not found. Please go back to the room selection.');
-                    return;
-                }
-
-                textarea.disabled = true; // Disable textarea during send
-                button.disabled = true; // Disable button during send
-
-                // Simulate sending the message
-                fetch("/send_message", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id) + '&room_id=' + encodeURIComponent("{{ room_info.id }}")
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error('Error:', data.error);
-                        alert(data.error);
-                    } else {
-                        msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
-                        msgArea.innerHTML += `<div><strong>Server:</strong> ${data.text}</div>`;
-                        msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                    }
-                })
-                .catch(error => {
-                    console.error('Fetch Error:', error);
-                    alert('An error occurred. Please check the console for details.');
-                })
-                .finally(() => {
-                    textarea.disabled = false; // Re-enable textarea after response
-                    button.disabled = false; // Re-enable button after response
-                    textarea.value = ""; // Clear input after sending
-                    textarea.focus(); // Focus textarea ready for next message
-                    startIntermittentTimer(); // Reset the intermittent timer
-                });
-            }
-
-            textarea.addEventListener("keydown", function(event) {
-                if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault(); // Prevent the default action (new line)
-                    sendMessage(); // Call function to send message
-                }
-            });
-
-            sendDefaultMessage(); // Send the default message when the page loads
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            alert('An error occurred. Please check the console for details.');
+        })
+        .finally(() => {
+            textarea.disabled = false; // Re-enable textarea after response
+            button.disabled = false; // Re-enable button after response
+            textarea.value = ""; // Clear input after sending
+            textarea.placeholder = "Type here and press Enter to send"; // Update placeholder after first message
+            textarea.focus(); // Focus textarea ready for next message
         });
+    }
+
+    textarea.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault(); // Prevent the default action (new line)
+            sendMessage(); // Call function to send message
+        }
+    });
+
+    // Array of (time, some_text) pairs
+    const helpTextUpdates = [
+        [10*1000, "a multi-user Kansas"],
+        [10*1000, "a multi-user swatch of editable Kansas"],
+        [30*1000, "this is Same, Kansas"],
+        [60*1000, "this is the same Kansas"],
+        [60*1000, "the same Kansas for everyone"],
+        [20*1000, "you are an architect here"],
+        [70*1000, "how incastellated?"],
+        [50*1000, "others will enjoy later"],
+        [50*1000, ", artificer"],
+        [20*1000, "different later"],
+        [20*1000, "or non-homologous nows"],
+        [40*1000, "different others"],
+        [50*1000, "same here"],
+        [10*1000, "a multi-user swatch of same Canvas"],
+        [30*1000, "(Inside the Castle www.insidethecastle.org)"],
+    ];
+
+    // Function to update the helptext
+    function updateHelpText(index) {
+        if (index < helpTextUpdates.length) {
+            const [time, text] = helpTextUpdates[index];
+            helpText.textContent = text;
+            setTimeout(() => {
+                updateHelpText(index + 1);
+            }, time);
+        }
+    }
+
+    // Function to update the textarea with the next default message
+    function updateTextareaMessage(index) {
+        if (index < defaultMessages.length) {
+            textarea.placeholder = defaultMessages[index];
+            setTimeout(() => {
+                updateTextareaMessage(index + 1);
+            }, 5000); // Update every 5 seconds
+        } else {
+            textarea.placeholder = finalDefaultMessage;
+        }
+    }
+
+    // Start updating helptext
+    updateHelpText(0);
+    // Start updating textarea messages
+    updateTextareaMessage(0);
+});
+
+
     </script>
 </body>
 </html>
+
+
 
 

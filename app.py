@@ -5,14 +5,11 @@ import time
 
 import threading ## for rewriting 
 
-from create_main_prompt import build_prompt
 from llm_interface import get_llm_response
-from update_text_with_llm import maybe_update_room, maybe_update_character, maybe_remove_person_from_room
-from little_utilities import look_up_email, update_player_room, get_room_author_title, room_player_is_in, user_id2yaml
-import new_user 
-from google_sheets_io import append_data_to_google_sheet
-import building_rooms
+from update_text_with_llm import maybe_update_field_yaml, maybe_update_field_prose, maybe_update_user_yaml
+from google_sheets_io import append_data_to_google_sheet, write_field_to_google_sheets
 
+from make_main_prompt import build_prompt
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -22,23 +19,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 import datetime
 
-import write_rooms_to_google_sheets
-
 # Users for basic auth
 users = {
     "itc": "platsplatsplats",  # remember to remove this
 } 
-
-
-# Load room information
-with open('room_id2room_title_author.json', 'r') as f:
-    room_id2title_author = json.load(f)
-
-
-room_info_for_frontend = [
-    {"id": k, "title": v["title"], "author": v["author"]}
-    for k, v in room_id2title_author.items()
-]
 
 
 @auth.verify_password
@@ -48,92 +32,77 @@ def verify_password(meta_username, password):
     return None
 
 
-def process_input(user_text, user_id, room_id):
+def process_history(history):
+    hist_string = ""
+    for h in history:
+        print(h)  # Log h to inspect its structure
+        if isinstance(h, dict):  # Ensure h is a dictionary
+            if 'user' in h and 'text' in h:  # Ensure required keys are present
+                if h['user'] == "You":
+                    hist_string += "User: %s\n" % h["text"]
+                else:
+                    hist_string += "AI: %s\n" % h["text"]
+            else:
+                print("Warning: Missing 'user' or 'text' key in history item:", h)
+        else:
+            print("Warning: Unexpected item in history:", h)
+    return hist_string
+
+
+def process_input(user_text, user_id, user_email, user_yaml, history):
     """
     get main llm response
-    threadedly start other changes to castle
+    threadedly start other changes to field, map, etc.
     return main llm response
     """
-    llm_response = get_llm_response(build_prompt(user_text, user_id, room_id))
-    thread = threading.Thread(target=process_input_slow_stuff, args=(user_text, user_id, room_id, llm_response))
+    llm_response = get_llm_response(build_prompt(user_text, user_yaml, history))
+    user_yaml = maybe_update_user_yaml(user_text, llm_response, user_yaml) ## just update each time
+    thread = threading.Thread(target=process_input_slow_stuff, args=(user_text, user_id, user_email, llm_response, history))
     thread.start()
-    return llm_response
+    return {"response":llm_response,"user_yaml":user_yaml}
 
 
-def process_input_slow_stuff(user_text, user_id, room_id, llm_response):
+def process_input_slow_stuff(user_text, user_id, user_email, llm_response, history):
     """
     to be threaded so costly io and llm responses that won't be immediately returned 
     won't block return of response
+        - update field (both prose description and yaml)
+        - send response to google sheets
     """
-    maybe_update_room(user_text, llm_response, room_id)
-    char_was_updated = maybe_update_character(user_text, llm_response, user_id) ## bool, True means updated
-    data_to_append = [[int(time.time()), user_id, look_up_email(user_id), 
-        user_text, llm_response, room_id, room_id2title_author[room_id]['title']]]
+    maybe_update_field_yaml(user_text,llm_response,history)
+    maybe_update_field_prose(user_text,llm_response)
+    data_to_append = [[int(time.time()), user_id, user_text, llm_response]]
     append_data_to_google_sheet(data_to_append)
 
 
 @app.route('/')
 @auth.login_required
 def home():
-    return render_template('map.html', rooms=room_info_for_frontend)
+    return render_template('chat.html')
 
-
-@app.route('/select_room', methods=['POST'])
-def select_room():
-    room = request.form.get('room_id')
-    user_id = request.form.get('user_id')
-    if not room or not user_id:
-        return "Missing room or user ID", 400
-    prev_room = room_player_is_in(user_id)
-    print(prev_room)
-    print(type(prev_room))
-    ## maybe remove user from prev room
-    if type(prev_room)==str:
-        if prev_room!=room:
-            maybe_remove_person_from_room(user_id,prev_room)
-    ##
-    update_player_room(user_id, room)
-    ##
-    author_title_json = get_room_author_title(room)
-    room_author,room_title=author_title_json['author'],author_title_json['title']
-    return render_template('chat.html', room_info={"id": room, "title": room_title, "author": room_author})
-
-
-@app.route('/handshake', methods=['POST'])
-def handshake():
-    user_id = request.form.get('user_id')
-    email = request.form.get('email', "")
-    if not user_id:
-        return jsonify({'error': 'User ID is required'}), 400
-    print(f'New user handshake: {user_id}')
-    new_user.maybe_create_new_user(user_id, email)
-    return jsonify({'message': 'Handshake successful', 'text': 'Welcome!'})
-
-
-@app.route('/fetch_user_data', methods=['POST'])
-def fetch_user_data():
-    user_id = request.form.get('user_id')
-    return user_id2yaml(user_id)
 
 @app.route("/send_message", methods=["POST"])
 def send_message():
     user_input = request.form.get("message")
     user_id = request.form.get("user_id")
-    room_id = request.form.get("room_id")
+    user_email = request.form.get("user_email")
+    user_yaml = request.form.get("user_yaml")
+    history = process_history(json.loads(request.form.get("history")))
+    #last_n_turns = request.form.get("last_n_turns")
     if user_input.strip():
-        response = process_input(user_input, user_id, room_id)
-        return jsonify({"user": "Server", "text": response})
+        response = process_input(user_input, user_id, user_email, user_yaml, history)
+        return jsonify({"user": "Same, KA", "text": response['response'], "user_yaml":response['user_yaml']})
     return jsonify({"error": "No message received"})
 
 
 def scheduled_task():
-    write_rooms_to_google_sheets.write()
+    write_field_to_google_sheets()
     print(f"Scheduled task (writing rooms to sheets) executed at {datetime.datetime.now()}")
 
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=3)
+    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=20)
     scheduler.start()
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())

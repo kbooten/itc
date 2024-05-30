@@ -1,0 +1,21 @@
+field:
+  objects:[]
+  structures:
+    - name: small barn
+      public_description: "A barn with a table covered with books."
+      location: "northwest corner of field"
+      secret_description: "Any speech in this room is translated into Italian."
+      connections: 
+        - name: small barn
+          type: dirt path        
+      objects:
+        - name: old table
+          public_description: "An old, rickety wooden table."
+          location: "near the back of the room"
+          secret_description: none
+    - name: wall
+      public_description: "A wall made of smooth grey stones, encircling the user completely."
+      location: "around the user, about 5 feet away"
+      secret_description: none
+
+I have updated the yaml to include the newly created wall structure around the user.
