@@ -343,8 +343,9 @@ document.addEventListener("DOMContentLoaded", function() {
     updateTextareaMessage();
 
     // Display the initial message from SK
-    msgArea.innerHTML += `<div><strong>SK:</strong> woooosh, wooooosh</div>`;
-    messageHistory.push({ user: 'SK', text: "woooosh, wooooosh" });
+    const firstMsg = "/// /// //|///// *wind through grass* /// //// ///||//"
+    msgArea.innerHTML += "<div><strong>SK:</strong>"+firstMsg+"</div>";
+    //messageHistory.push({ user: 'SK', text: firstMsg });
 
     // Array of (time, some_text) pairs
     const helpTextUpdates = [

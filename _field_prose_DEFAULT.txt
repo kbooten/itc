@@ -1,0 +1,1 @@
+The field is a 20x20 grid containing a small barn, an old table, a wall, and an extra structure. A small barn sits in the middle of the field. Inside is a table, and on that table is a book.

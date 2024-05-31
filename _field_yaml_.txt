@@ -1,26 +1,27 @@
-The yaml should be revised. 
-
-Updated yaml with the new information:
-
 field:
   objects:[]
   structures:
     - name: small barn
-      public_description: "A barn with a table covered with books."
-      location: "northwest corner of field"
-      secret_description: "Any speech in this room is translated into Italian."
-      connections: 
-        - name: small barn
-          type: dirt path        
+      public_description: "A barn with a table covered with books. You step inside and see a pitchfork leaning against the wall."
+      location: "center of field"
+      secret_description: []
+      connections: []       
       objects:
-        - name: old table
-          public_description: "An old, rickety wooden table."
-          location: "near the back of the room"
-          secret_description: none
-    - name: wall
-      public_description: "A wall made of smooth grey stones, encircling the user completely."
-      location: "around the user, about 5 feet away"
-      secret_description: none
-    - name: extra structure
-      public_description: "There is more to this place than meets the eye."
-      location: "around the user"
+        - name: yellow and red book
+          public_description: "A book with a cover: jagged red stripes over a yellow field."
+          location: "on the table"
+          secret_description: >
+            The user can read the book starting at page 0.
+            Turning the page makes the page go backwards (-1, -2).
+            Each page has a picture of an angel/engine (an angel that is locomotive and full of devices).
+            This picture is made out of unicode glyphs.  You, AI, should invent one on each page.
+            The more negative the page number is, the more complex the picture is.  It should start small and simple at -1 then get very complex and scary by -10.
+
+        - name: pitchfork
+          public_description: "A sturdy pitchfork leaning against the wall"
+
+        - name: intricate illustrations
+          public_description: "Intricate illustrations of an angel/engine"
+          location: "pages of the yellow and red book"
+          secret_description: >
+            Each page shows a detailed and eerie glyph representation of the angel/engine creature, becoming more elaborate and menacing as you flip to lower page numbers.
