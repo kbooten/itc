@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Same, Kansas</title>
     <style>
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -91,7 +90,7 @@
             transform: rotate(87deg) translateY(-50%);
             transform-origin: center;
             color: #5df542;
-            font-size: .9rem; /* Decreased font size */
+            font-size: 0.9rem; /* Decreased font size */
             font-weight: bold;
             white-space: nowrap;
             z-index: 10;
@@ -110,7 +109,7 @@
             box-sizing: border-box;
             height: auto; /* Fix height to prevent hanging off the bottom */
             position: relative; /* Ensure it stays within the viewport */
-            font-size:.9rem;
+            font-size: 0.9rem;
         }
 
         #message {
@@ -149,7 +148,7 @@
             box-sizing: border-box;
             position: relative;
             height: 90px; /* Match the height of the text area */
-            bottom:30px; /* make it goofy */
+            bottom: 30px; /* make it goofy */
         }
 
         /* Adding random rotations */
@@ -190,12 +189,9 @@
         }
 
         /* Media queries for responsive design */
-        @media only screen 
-          and (max-width: 600px), /* General mobile devices */
-          and (max-device-width: 768px) /* iPads and tablets */
-          and (-webkit-min-device-pixel-ratio: 2), /* High DPI screens */
-          and (orientation: portrait) /* Portrait mode */
-            {
+        @media only screen and (max-width: 600px),
+               only screen and (max-device-width: 768px) and (orientation: portrait),
+               only screen and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
             body {
                 font-size: 1rem; /* Adjust the base font size */
             }
@@ -206,7 +202,7 @@
 
             #helptext {
                 font-size: 1rem; /* Adjust font size */
-                right: -30px; /* Set maximum distance from the right border */
+                right: 10px; /* Set maximum distance from the right border */
             }
 
             #message {
@@ -234,7 +230,6 @@
                 padding: 10px 5px;
             }
         }
-    
     </style>
 </head>
 <body>
