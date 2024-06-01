@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Same, Kansas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <!-- Prevent zoom on text input -->
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -213,7 +215,8 @@
 
             #send-button {
                 margin-left: 0; /* Remove left margin */
-                width: 100%; /* Full width button */
+                width: auto; /* Ensure button width is not bigger than the text input */
+                max-width: 100%; /* Ensure button width is not bigger than the text input */
                 top: auto; /* Reset top position */
                 height: auto; /* Adjust height */
                 margin-top: 10px; /* Add margin at the top */
