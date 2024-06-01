@@ -4,166 +4,233 @@
     <meta charset="UTF-8">
     <title>Same, Kansas</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #fff;
+            color: #000;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            font-size: 0.95rem; /* Slightly smaller base font size */
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #fff;
-    color: #000;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #000;
+            color: #fff;
+            border-bottom: 2px dotted #fff;
+            transform: skewY(-3deg) rotateZ(-2deg);
+            z-index: 2000;
+            width: calc(100% + 20px); /* Extend the width beyond the viewport */
+            margin-left: -10px; /* Negative margin to offset the extra width */
+            box-sizing: border-box;
+        }
 
-#header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #000;
-    color: #fff;
-    border-bottom: 2px dotted #fff;
-    transform: skewY(-3deg) rotateZ(-2deg);
-    z-index: 2000;
-    width: calc(100% + 20px); /* Extend the width beyond the viewport */
-    margin-left: -10px; /* Negative margin to offset the extra width */
-    box-sizing: border-box;
-}
+        #header-left, #header-right {
+            display: flex;
+            align-items: center;
+        }
 
-#header-left, #header-right {
-    display: flex;
-    align-items: center;
-}
+        #header-left button, #header-right button {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #000;
+            border: 2px dotted #000;
+            cursor: pointer;
+            margin-left: 10px;
+            transform: skewY(3deg) rotateZ(2deg);
+        }
 
-#header-left button, #header-right button {
-    padding: 10px 20px;
-    background-color: #fff;
-    color: #000;
-    border: 2px dotted #000;
-    cursor: pointer;
-    margin-left: 10px;
-    transform: skewY(3deg) rotateZ(2deg);
-}
+        #room-name {
+            flex-grow: 1;
+            text-align: center;
+            transform: skewY(2deg) rotateZ(-1deg);
+            font-size: 1.8rem; /* Decreased relative font size */
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-#room-name {
-    flex-grow: 1;
-    text-align: center;
-    transform: skewY(2deg) rotateZ(-1deg);
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+        #messages-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #fff;
+            overflow-y: auto; /* Ensure the container is scrollable if content overflows */
+        }
 
-#messages-container {
-    position: relative;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #fff;
-    overflow-y: auto; /* Ensure the container is scrollable if content overflows */
-}
+        #messages {
+            width: 100%;
+            max-width: 800px;
+            border: 2px dotted #000;
+            overflow-y: auto;
+            padding: 20px;
+            transform: skewY(-2deg) rotateZ(-1deg);
+            position: relative;
+            box-sizing: border-box;
+        }
 
-#messages {
-    width: 60%;
-    max-width: 800px;
-    border: 2px dotted #000;
-    overflow-y: auto;
-    padding: 20px;
-    transform: skewY(-2deg) rotateZ(-1deg);
-    position: relative;
-    box-sizing: border-box;
-}
+        #messages div {
+            margin-bottom: 15px;
+            transform: rotate(calc(var(--rotation, 0deg)));
+        }
 
-#messages div {
-    margin-bottom: 15px;
-    transform: rotate(calc(var(--rotation, 0deg)));
-}
+        #helptext {
+            position: absolute;
+            top: 50%;
+            right: 10px; /* Set distance from the right border */
+            transform: rotate(87deg) translateY(-50%);
+            transform-origin: center;
+            color: #5df542;
+            font-size: 1.1rem; /* Decreased font size */
+            font-weight: bold;
+            white-space: nowrap;
+            z-index: 1;
+        }
 
-#helptext {
-    position: absolute;
-    top: 50%;
-    right: -14px;
-    transform: rotate(87deg) translateY(-50%);
-    transform-origin: center;
-    color: #5df542;
-    font-size: 14px;
-    font-weight: bold;
-    white-space: nowrap;
-    z-index: 1;
-}
+        #input-area {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Align items vertically */
+            padding: 10px;
+            background-color: #000;
+            border-top: 2px dotted #fff; /* Add a dotted border at the top */
+            transform: skewY(2deg) rotateZ(1deg);
+            width: calc(100% + 20px); /* Extend the width beyond the viewport */
+            margin-left: -10px; /* Negative margin to offset the extra width */
+            box-sizing: border-box;
+            height: auto; /* Fix height to prevent hanging off the bottom */
+            position: relative; /* Ensure it stays within the viewport */
+        }
 
-#input-area {
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Align items vertically */
-    padding: 10px;
-    background-color: #000;
-    border-top: 2px dotted #fff; /* Add a dotted border at the top */
-    transform: skewY(2deg) rotateZ(1deg);
-    width: calc(100% + 20px); /* Extend the width beyond the viewport */
-    margin-left: -10px; /* Negative margin to offset the extra width */
-    box-sizing: border-box;
-    height: 80px; /* Fix height to prevent hanging off the bottom */
-    position: relative; /* Ensure it stays within the viewport */
-}
+        #message {
+            width: 100%;
+            max-width: 600px;
+            height: 90px; /* Decreased input area height */
+            padding: 10px;
+            border: 2px dotted #000;
+            background-color: #fff;
+            color: #000;
+            transform: skewY(-2deg) rotateZ(-1deg);
+            box-sizing: border-box;
+            font-size: 1.1rem; /* Decreased font size */
+        }
 
-#message {
-    width: 60%;
-    max-width: 800px;
-    height: 50px;
-    padding: 10px;
-    border: 2px dotted #000;
-    background-color: #fff;
-    color: #000;
-    transform: skewY(-2deg) rotateZ(-1deg);
-    box-sizing: border-box;
-}
+        #input-area button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #000;
+            border: 2px dotted #000;
+            cursor: pointer;
+            transform: skewY(-2deg) rotateZ(-1deg);
+            box-sizing: border-box;
+            font-size: 1.1rem; /* Decreased font size */
+        }
 
-#input-area button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #fff;
-    color: #000;
-    border: 2px dotted #000;
-    cursor: pointer;
-    transform: skewY(-2deg) rotateZ(-1deg);
-    box-sizing: border-box;
-}
+        #send-button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #000;
+            border: 2px dotted #000;
+            cursor: pointer;
+            transform: skewY(-2deg) rotateZ(-1deg);
+            box-sizing: border-box;
+            position: relative;
+            height: 90px; /* Match the height of the text area */
+            bottom:30px; /* make it goofy */
+        }
 
+        /* Adding random rotations */
+        #messages div:nth-child(odd) {
+            --rotation: 1deg;
+        }
 
-/* Adding random rotations */
-#messages div:nth-child(odd) {
-    --rotation: 1deg;
-}
+        #messages div:nth-child(even) {
+            --rotation: -1deg;
+        }
 
-#messages div:nth-child(even) {
-    --rotation: -1deg;
-}
+        /* Modal CSS */
+        .modal {
+            display: flex; /* Display as flex */
+            justify-content: center;
+            align-items: center;
+            position: fixed; /* Stay in place */
+            z-index: 9999; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
 
-#send-button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #fff;
-    color: #000;
-    border: 2px dotted #000;
-    cursor: pointer;
-    transform: skewY(-2deg) rotateZ(-1deg);
-    box-sizing: border-box;
-    position: relative;
-    top: -38px; /* Move the button 10 pixels up */
-}
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            box-sizing: border-box;
+            text-align: center;
+        }
 
+        .close {
+            display: none; /* Hide the close button */
+        }
+
+        /* Media queries for responsive design */
+        @media (max-width: 600px) {
+            body {
+                font-size: 1rem; /* Adjust the base font size */
+            }
+
+            #room-name {
+                font-size: 1.5rem; /* Adjust font size */
+            }
+
+            #helptext {
+                font-size: 1rem; /* Adjust font size */
+                right: -30px; /* Set maximum distance from the right border */
+            }
+
+            #message {
+                height: 80px; /* Increase input area height */
+                padding: 10px;
+                font-size: 1.1rem; /* Increase font size */
+            }
+
+            #send-button {
+                margin-left: 0; /* Remove left margin */
+                width: 100%; /* Full width button */
+                top: auto; /* Reset top position */
+                height: auto; /* Adjust height */
+                margin-top: 10px; /* Add margin at the top */
+            }
+
+            #messages {
+                width: 100%; /* Full width for messages */
+                padding: 10px; /* Reduce padding */
+            }
+
+            #input-area {
+                height: auto; /* Let the input area adjust its height */
+                flex-direction: column; /* Stack elements vertically */
+                padding: 10px 5px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="header">
         <div id="room-name">Same, Kansas</div>
-        <div id="header-right">
-            <button id="popup-button" onclick="openPopup()">Open Pop-up</button>
-        </div>
     </div>
     <div id="messages-container">
         <div id="messages"></div>
@@ -173,219 +240,254 @@ body {
         <textarea id="message" placeholder="try entering something like: Where am I?" required></textarea>
         <button id="send-button" onclick="sendMessage()">Send</button>
     </div>
+
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>If you are here, it is most likely because you survived INSIDE THE CASTLE 2 (REVENGE OF THE CASTLE FREAK)</p>
+            <p>Now is your reward.<p>
+            <p>This page is a murkily multiplayer Kansas.</p>
+            <p>It presents an opportunity for collaborative writing.</p>
+            <p>To interact with this page, you must agree that what you write can be published by Inside the Castle (Lawrence, Kansas).</p>
+            <br>
+            <p>Do you agree?<p>
+            <label>
+                <input type="checkbox" id="agreeCheckbox"> I agree
+            </label>
+            <button id="agreeButton" disabled>Continue</button>
+        </div>
+    </div>
+
     <script>
-/// initial character yaml
-var yaml = `
-    character:
-      location: []
-      health:
-        max_health: 100
-        current_health: 100
-      stats:
-        strength: 10
-        agility: 8
-      inventory:
-        items: []
-      skills:
-        - power to create buildings and objects
-      status_effects: []
-    `;
+        /// initial character yaml
+        var yaml = `
+            character:
+            location: []
+            health:
+                max_health: 100
+                current_health: 100
+            stats:
+                strength: 10
+                agility: 8
+            inventory:
+                items: []
+            skills:
+                - power to create buildings and objects
+            status_effects: []
+        `;
 
-document.addEventListener("DOMContentLoaded", function() {
-    const textarea = document.getElementById("message");
-    const button = document.querySelector("button");
-    const msgArea = document.getElementById("messages");
-    const helpText = document.getElementById("helptext");
+        document.addEventListener("DOMContentLoaded", function() {
+            // Modal related code
+            var modal = document.getElementById("myModal");
+            var agreeCheckbox = document.getElementById("agreeCheckbox");
+            var agreeButton = document.getElementById("agreeButton");
 
-    const MAX_HISTORY = 12; // Adjust the number of messages to store
-    let messageHistory = [];
+            // Show the modal
+            modal.style.display = "flex";
 
-    const initialMessages = [
-        { text: "Try: Where am I?", multiplier: 1 },
-        { text: "Try to explore this world.", multiplier: 2 },
-        { text: "Oh, I forgot to mention: you can make things in this world.  Walls.  Rooms.  Other structures.  Other objects.", multiplier: 1 },
-        { text: "You can say, e.g., Make a wall around that well.", multiplier: 2 },
-        { text: "You can make an object, e.g., Make a minidisk player and put it on the lip of the well.", multiplier: 3 },
-        { text: "When making things, specific is better.", multiplier: 2 },
-        { text: "This is a multiplayer room.", multiplier: 2 },
-        { text: "Others will visit later, maybe, and move in what you have built.", multiplier: 2 },
-        { text: "Try to make it incastellated.", multiplier: 3 },
-        { text: "Oh, I forgot to mention: you can make SECRETS.", multiplier: 1 },
-        { text: "You can say, e.g., Make a minidisk player.  Put it on the lip of the well.  The SECRET is that when you try to listen to it just plays static, unless the player has equipped cipher-stud-earrings, in which case play this message: VISIT WWW.INSIDETHECASTLE.ORG", multiplier: 3 },
-    ];
-    const finalDefaultMessage = "How can I help you today?";
-
-    function generateRepeatedMessages(messages) {
-        let result = [];
-        for (const message of messages) {
-            for (let i = 0; i < message.multiplier; i++) {
-                result.push(message.text);
+            // Enable the continue button only when the checkbox is checked
+            agreeCheckbox.onchange = function() {
+                agreeButton.disabled = !agreeCheckbox.checked;
             }
-        }
-        return result;
-    }
 
-    const defaultMessages = generateRepeatedMessages(initialMessages);
-    let currentMessageIndex = 0;
+            // When the user clicks the continue button, proceed with the prompts
+            agreeButton.onclick = function() {
+                if (agreeCheckbox.checked) {
+                    modal.style.display = "none";
+                    initializePage();
+                }
+            }
 
-    function generateRandomId(length) {
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            result += Math.floor(Math.random() * 10);
-        }
-        return result;
-    }
+            function initializePage() {
+                const textarea = document.getElementById("message");
+                const button = document.querySelector("button");
+                const msgArea = document.getElementById("messages");
+                const helpText = document.getElementById("helptext");
 
-    function promptForUsernameAndEmail() {
-        let username = prompt("Enter your username:");
-        while (!username) {
-            username = prompt("Username cannot be empty. Please enter your username:");
-        }
-        let email = prompt("Enter your email:");
-        while (!email) {
-            email = prompt("Email cannot be empty. Please enter your email:");
-        }
-        return { username, email };
-    }
+                const MAX_HISTORY = 12; // Adjust the number of messages to store
+                let messageHistory = [];
 
-    var id = localStorage.getItem("inside_the_castle_id");
-    var email = localStorage.getItem("inside_the_castle_email");
+                const initialMessages = [
+                    { text: "Try: Where am I?", multiplier: 1 },
+                    { text: "Try to explore this world.", multiplier: 2 },
+                    { text: "Oh, I forgot to mention: you can make things in this world.  Walls.  Rooms.  Other structures.  Other objects.", multiplier: 1 },
+                    { text: "You can say, e.g., Make a wall around that well.", multiplier: 2 },
+                    { text: "You can make an object, e.g., Make a minidisk player and put it on the lip of the well.", multiplier: 3 },
+                    { text: "When making things, specific is better.", multiplier: 2 },
+                    { text: "This is a multiplayer room.", multiplier: 2 },
+                    { text: "Others will visit later, maybe, and move in what you have built.", multiplier: 2 },
+                    { text: "Try to make it incastellated.", multiplier: 3 },
+                    { text: "Oh, I forgot to mention: you can make SECRETS.", multiplier: 1 },
+                    { text: "You can say, e.g., Make a minidisk player.  Put it on the lip of the well.  The SECRET is that when you try to listen to it just plays static, unless the player has equipped cipher-stud-earrings, in which case play this message: VISIT WWW.INSIDETHECASTLE.ORG", multiplier: 3 },
+                ];
+                const finalDefaultMessage = "How can I help you today?";
 
-    if (!id || !email) { // no id or no email
-        let userInfo = promptForUsernameAndEmail(); // Get username and email
-        let username = userInfo.username;
-        email = userInfo.email; // Assign email here
-        var name_with_random_id = username + "_" + generateRandomId(7);
-        localStorage.setItem("inside_the_castle_id", name_with_random_id);
-        localStorage.setItem("inside_the_castle_email", email);
-        localStorage.setItem("inside_the_castle_user_yaml", yaml);
-        window.user_id = name_with_random_id;
-    } else {
-        window.user_id = id;
-        window.user_email = email;
-    }
-
-    function sendMessage() {
-        const message = textarea.value.trim();
-        if (!message) return; // Do nothing if the message is empty
-
-        const user_id = localStorage.getItem("inside_the_castle_id");
-        if (!user_id) {
-            alert('User ID not found. Please go back to the home page.');
-            return;
-        }
-
-        let user_yaml = localStorage.getItem("inside_the_castle_user_yaml");
-
-        textarea.disabled = true; // Disable textarea during send
-        button.disabled = true; // Disable button during send
-
-        // Simulate sending the message
-        fetch("/send_message", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id) + '&user_email=' + encodeURIComponent(window.user_email) + '&user_yaml=' + encodeURIComponent(user_yaml) + '&history=' + encodeURIComponent(JSON.stringify(messageHistory))
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error('Error:', data.error);
-                alert(data.error);
-            } else {
-                msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
-                msgArea.innerHTML += `<div><strong>SK:</strong> ${data.text}</div>`;
-                msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
-                localStorage.setItem("inside_the_castle_user_yaml", data.user_yaml);
-
-                // Update message history
-                messageHistory.push({ user: 'You', text: message });
-                messageHistory.push({ user: 'SK', text: data.text });
-                if (messageHistory.length > MAX_HISTORY * 2) {
-                    messageHistory = messageHistory.slice(-MAX_HISTORY * 2); // Keep only the last n messages
+                function generateRepeatedMessages(messages) {
+                    let result = [];
+                    for (const message of messages) {
+                        for (let i = 0; i < message.multiplier; i++) {
+                            result.push(message.text);
+                        }
+                    }
+                    return result;
                 }
 
-                // Update the textarea placeholder with the next default message
+                const defaultMessages = generateRepeatedMessages(initialMessages);
+                let currentMessageIndex = 0;
+
+                function generateRandomId(length) {
+                    let result = '';
+                    for (let i = 0; i < length; i++) {
+                        result += Math.floor(Math.random() * 10);
+                    }
+                    return result;
+                }
+
+                function promptForUsernameAndEmail() {
+                    let username = prompt("Enter a name for yourself.  It can be your real name, or not:");
+                    while (!username) {
+                        username = prompt("Nom du Kansas cannot be empty. Please give yourself a Nom du Kansas:");
+                    }
+                    let email = prompt("Enter your email in case we need to contact you about something:");
+                    while (!email) {
+                        email = prompt("Email cannot be empty but you can put random letters in if you really don't care:");
+                    }
+                    return { username, email };
+                }
+
+                var id = localStorage.getItem("inside_the_castle_id");
+                var email = localStorage.getItem("inside_the_castle_email");
+
+                if (!id || !email) { // no id or no email
+                    let userInfo = promptForUsernameAndEmail(); // Get username and email
+                    let username = userInfo.username;
+                    email = userInfo.email; // Assign email here
+                    var name_with_random_id = username + "_" + generateRandomId(7);
+                    localStorage.setItem("inside_the_castle_id", name_with_random_id);
+                    localStorage.setItem("inside_the_castle_email", email);
+                    localStorage.setItem("inside_the_castle_user_yaml", yaml);
+                    window.user_id = name_with_random_id;
+                } else {
+                    window.user_id = id;
+                    window.user_email = email;
+                }
+
+                function sendMessage() {
+                    const message = textarea.value.trim();
+                    if (!message) return; // Do nothing if the message is empty
+
+                    const user_id = localStorage.getItem("inside_the_castle_id");
+                    if (!user_id) {
+                        alert('User ID not found. Please go back to the home page.');
+                        return;
+                    }
+
+                    let user_yaml = localStorage.getItem("inside_the_castle_user_yaml");
+
+                    textarea.disabled = true; // Disable textarea during send
+                    button.disabled = true; // Disable button during send
+
+                    // Simulate sending the message
+                    fetch("/send_message", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'message=' + encodeURIComponent(message) + '&user_id=' + encodeURIComponent(user_id) + '&user_email=' + encodeURIComponent(window.user_email) + '&user_yaml=' + encodeURIComponent(user_yaml) + '&history=' + encodeURIComponent(JSON.stringify(messageHistory))
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            alert(data.error);
+                        } else {
+                            msgArea.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+                            msgArea.innerHTML += `<div><strong>SK:</strong> ${data.text}</div>`;
+                            msgArea.scrollTop = msgArea.scrollHeight; // Scroll to bottom
+                            localStorage.setItem("inside_the_castle_user_yaml", data.user_yaml);
+
+                            // Update message history
+                            messageHistory.push({ user: 'You', text: message });
+                            messageHistory.push({ user: 'SK', text: data.text });
+                            if (messageHistory.length > MAX_HISTORY * 2) {
+                                messageHistory = messageHistory.slice(-MAX_HISTORY * 2); // Keep only the last n messages
+                            }
+
+                            // Update the textarea placeholder with the next default message
+                            updateTextareaMessage();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch Error:', error);
+                        alert('An error occurred. Please check the console for details.');
+                    })
+                    .finally(() => {
+                        textarea.disabled = false; // Re-enable textarea after response
+                        button.disabled = false; // Re-enable button after response
+                        textarea.value = ""; // Clear input after sending
+                        textarea.focus(); // Focus textarea ready for next message
+                    });
+                }
+
+                textarea.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault(); // Prevent the default action (new line)
+                        sendMessage(); // Call function to send message
+                    }
+                });
+
+                // Function to update the textarea with the next default message
+                function updateTextareaMessage() {
+                    if (currentMessageIndex < defaultMessages.length) {
+                        textarea.placeholder = defaultMessages[currentMessageIndex];
+                        currentMessageIndex++;
+                    } else {
+                        textarea.placeholder = finalDefaultMessage;
+                    }
+                }
+
+                // Initial placeholder setup
                 updateTextareaMessage();
+
+                // Display the initial message from SK
+                const firstMsg = "/// /// //|///// *wind through grass* /// //// ///||//"
+                msgArea.innerHTML += "<div><strong>SK:</strong>"+firstMsg+"</div>";
+                //messageHistory.push({ user: 'SK', text: firstMsg });
+
+                // Array of (time, some_text) pairs
+                const helpTextUpdates = [
+                    [10*1000, "a multi-user Kansas"],
+                    [10*1000, "a multi-user swatch of editable Kansas"],
+                    [30*1000, "this is Same, Kansas"],
+                    [60*1000, "this is the same Kansas"],
+                    [60*1000, "the same Kansas for everyone"],
+                    [20*1000, "you are an architect here"],
+                    [120*1000, "how incastellated?"],
+                    [50*1000, "others will enjoy later"],
+                    [50*1000, ", artificer"],
+                    [20*1000, "different later"],
+                    [90*1000, "or non-homologous nows"],
+                    [40*1000, "different others"],
+                    [50*1000, "same here"],
+                    [120*1000, "a multi-user swatch of same Canvas"],
+                    [30*1000, "(Inside the Castle www.insidethecastle.org)"],
+                ];
+
+                // Function to update the helptext
+                function updateHelpText(index) {
+                    if (index < helpTextUpdates.length) {
+                        const [time, text] = helpTextUpdates[index];
+                        helpText.textContent = text;
+                        setTimeout(() => {
+                            updateHelpText(index + 1);
+                        }, time);
+                    }
+                }
+
+                // Start updating helptext
+                updateHelpText(0);
             }
-        })
-        .catch(error => {
-            console.error('Fetch Error:', error);
-            alert('An error occurred. Please check the console for details.');
-        })
-        .finally(() => {
-            textarea.disabled = false; // Re-enable textarea after response
-            button.disabled = false; // Re-enable button after response
-            textarea.value = ""; // Clear input after sending
-            textarea.focus(); // Focus textarea ready for next message
         });
-    }
-
-    textarea.addEventListener("keydown", function(event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault(); // Prevent the default action (new line)
-            sendMessage(); // Call function to send message
-        }
-    });
-
-    // Function to update the textarea with the next default message
-    function updateTextareaMessage() {
-        if (currentMessageIndex < defaultMessages.length) {
-            textarea.placeholder = defaultMessages[currentMessageIndex];
-            currentMessageIndex++;
-        } else {
-            textarea.placeholder = finalDefaultMessage;
-        }
-    }
-
-    // Initial placeholder setup
-    updateTextareaMessage();
-
-    // Display the initial message from SK
-    const firstMsg = "/// /// //|///// *wind through grass* /// //// ///||//"
-    msgArea.innerHTML += "<div><strong>SK:</strong>"+firstMsg+"</div>";
-    //messageHistory.push({ user: 'SK', text: firstMsg });
-
-    // Array of (time, some_text) pairs
-    const helpTextUpdates = [
-        [10*1000, "a multi-user Kansas"],
-        [10*1000, "a multi-user swatch of editable Kansas"],
-        [30*1000, "this is Same, Kansas"],
-        [60*1000, "this is the same Kansas"],
-        [60*1000, "the same Kansas for everyone"],
-        [20*1000, "you are an architect here"],
-        [70*1000, "how incastellated?"],
-        [50*1000, "others will enjoy later"],
-        [50*1000, ", artificer"],
-        [20*1000, "different later"],
-        [20*1000, "or non-homologous nows"],
-        [40*1000, "different others"],
-        [50*1000, "same here"],
-        [10*1000, "a multi-user swatch of same Canvas"],
-        [30*1000, "(Inside the Castle www.insidethecastle.org)"],
-    ];
-
-    // Function to update the helptext
-    function updateHelpText(index) {
-        if (index < helpTextUpdates.length) {
-            const [time, text] = helpTextUpdates[index];
-            helpText.textContent = text;
-            setTimeout(() => {
-                updateHelpText(index + 1);
-            }, time);
-        }
-    }
-
-    // Start updating helptext
-    updateHelpText(0);
-});
-
-
     </script>
 </body>
 </html>
-
-
-
-

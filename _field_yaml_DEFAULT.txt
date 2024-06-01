@@ -1,7 +1,3 @@
-The yaml should be revised. 
-
-Updated yaml with the new information:
-
 field:
   objects:[]
   structures:
@@ -22,5 +18,6 @@ field:
             The user can read the book starting at page 0.
             Turning the page makes the page go backwards (-1, -2).
             Each page has a picture of an angel/engine (an angel that is locamotive and full of devices).
-            This picture is made out of unicode glyphs.  The user should see an actual unicode character image, not just a mere description of the ange/engine. 
-            The more negative the page number is, the more complex the picture is.  It should start small and simple at -1 then get very complex and scary by -10. 
+            This picture is made out of unicode glyphs.  The user should see an actual unicode character image, not just a mere description of the angel/engine. 
+            The more negative the page number is, the more complex the picture is.  It should start small and simple at -1 then get very complex and scary by -10.
+            Again: you, the ai, should generate a unicode picture of an angel/engine and return it to them when they are reading a page of the book.

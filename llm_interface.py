@@ -8,7 +8,7 @@ openai_api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI()
 
 
-def get_llm_response(prompt,model="gpt-3.5-turbo"):
+def get_llm_response(prompt,model="gpt-4o"):
   """
   returns a string
   """

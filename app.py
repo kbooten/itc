@@ -21,7 +21,8 @@ import datetime
 
 # Users for basic auth
 users = {
-    "itc": "platsplatsplats",  # remember to remove this
+    "itc": "platsplatsplats",  
+    "castle":"freak",
 } 
 
 
