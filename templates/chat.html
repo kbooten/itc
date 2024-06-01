@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Same, Kansas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <!-- Prevent zoom on text input -->
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -379,7 +378,7 @@
                     window.user_email = email;
                 }
 
-                function sendMessage() {
+                window.sendMessage = function() {
                     const message = textarea.value.trim();
                     if (!message) return; // Do nothing if the message is empty
 
