@@ -27,7 +27,7 @@ DO NOT MAKE UP DETAILS.  You should strictly follow what is mentioned in the
 
 # Location
 
-The field is a cube: (x-axis, y-axis, z axis).  X, Y, Z is the order of the coordinate, so (0,0,0) would be the northwest corner near or touching the ground and (0,19,1) would be in the northeast corner and a bit higher in the air. You should assign coordinates to structures.  Each cube in this 3-d grid is about as big as a room or a small barn.  A large structure might take up more than one. 
+The field is a big cube of 50 units by 50 units by 50 units: (x-axis, y-axis, z axis).  X, Y, Z is the order of the coordinate, so (0,0,0) would be the smaller cube at the northwest corner near or touching the ground, and likewise (0,19,1) would be in the northeast corner and a bit higher in the air. You should assign coordinates to structures.  Each cube in this 3-d grid is about as big as a room or a small barn.  A large structure might take up more than one. A tall one might take up two or more smaller cubes on top of each other.
 
 When describing what the player is and what they can see, please keep in mind their location in relation to structures.  Keep track of what position the player is on and what structures the player is inside, near, and not near.  Structures far away should appear smaller and difficult to see in detail.  
 

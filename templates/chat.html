@@ -44,7 +44,8 @@
     <script>
         var yaml = `
             character:
-            location: []
+            location: "just south of the center of the field"
+            location_in_cube: (25, 24, 0)  # Right south of the barn
             health:
                 max_health: 100
                 current_health: 100
@@ -56,6 +57,7 @@
             skills:
                 - power to create buildings and objects
             status_effects: []
+
         `;
 
         document.addEventListener("DOMContentLoaded", function() {

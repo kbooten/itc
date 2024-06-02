@@ -1,23 +1,26 @@
 field:
-  objects:[]
+  objects: []
   structures:
     - name: small barn
       public_description: "A barn with a table covered with books."
       location: "center of field"
+      location_in_cube: (25, 25, 0)  # Placed at the center of the field at ground level
       secret_description: []
-      connections: []       
+      connections: []
       objects:
         - name: old table
           public_description: "An old, rickety wooden table."
           location: "near the back of the room"
+          location_in_cube: (25, 25, 0)  # Same as the barn, specific location within the barn
           secret_description: none
         - name: yellow and red book
           public_description: "A book with a cover: jagged red stripes over a yellow field."
           location: "on the table"
+          location_in_cube: (25, 25, 0)  # Same as the table, specific location on the table
           secret_description: >
             The user can read the book starting at page 0.
             Turning the page makes the page go backwards (-1, -2).
             Each page has a picture of an angel/engine (an angel that is locamotive and full of devices).
-            This picture is made out of unicode glyphs.  The user should see an actual unicode character image, not just a mere description of the angel/engine. 
-            The more negative the page number is, the more complex the picture is.  It should start small and simple at -1 then get very complex and scary by -10.
+            This picture is made out of unicode glyphs. The user should see an actual unicode character image, not just a mere description of the angel/engine.
+            The more negative the page number is, the more complex the picture is. It should start small and simple at -1 then get very complex and scary by -10.
             Again: you, the ai, should generate a unicode picture of an angel/engine and return it to them when they are reading a page of the book.
