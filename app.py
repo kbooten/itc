@@ -111,7 +111,7 @@ def scheduled_task():
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=20)
+    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=60)
     scheduler.start()
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
