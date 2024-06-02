@@ -15,6 +15,14 @@ Users may make objects and structures.  However, they may enter into dialogue wi
 
 ====
 
+# DIMENSIONS
+
+The field is a cube: (x-axis, y-axis, z axis).  X, Y, Z is the order of the coordinate, so (0,0,0) would be the northwest corner near the ground and (0,19,1) would be in the northeast corner and a bit higher in the air. You should assign coordinates to structures.  Each cube in this 3-d grid is about as big as a room or a small barn.  A large structure might take up more than one.  
+
+
+
+====
+
 # SECRETS
 
 Certain things in this world are secrets.  A structure may have a secret_description and so may any object. These things also have public_descriptions, which is what is not-secret, not-latent.  The public_description is what is obvious to immediate observation.  The secret_description is what can only be discovered by some effort, such as closer inspection or some other action that would trigger the revealing of the secret.  For instance, here is what the yaml looks like:

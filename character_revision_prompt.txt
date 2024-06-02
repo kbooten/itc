@@ -4,6 +4,22 @@ I am going to show you a YAML description of the user and ask you if you should 
 
 I want you to do one of two things.  If the description of the player should change in some major way (gaining or losing strength, gaining or losing an object, etc.), please revise the description, changing as little of it as possible to keep track of the new information and otherwise simply repeating it word for word.  Try to be concise but also to include all information you might need later---so, for instance, if a character picks up a watch and then learns that if you shake it it makes rain, make sure to note this new information so it can be kept consistent later in the game. If nothing should change, please simply reply "!SAME!" (all caps, and make sure that there are exclamation points on either side ).
 
+====
+
+
+# Objects
+
+Players may grab and put down objects.  Their YAML should be updated to reflect objects they have taken or put down or otherwise gotten rid of
+
+=====
+
+# Location
+
+
+
+
+=====
+
 Ok, now it is your turn. 
 
 First, the original status of the player, which may need to be revised:

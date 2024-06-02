@@ -2,6 +2,7 @@ The point of this task is to (possibly) revise a prose description of a setting.
 
 The game engine revises the yaml data for the field and its structures and objects first.  Your job is to make sure that the prose description of these things is up to date with the yaml data. I want you to do one of two things.  If---based on the yaml data---the description of the room needs to be updated (for instance, if the yaml has an object that the description does not have, or the yaml lacks an object that the description has and that must of been moved or otherwise deleted), please revise the description, changing as little of it as possible to keep track of the new information and otherwise simply repeating it word for word. If nothing should change, please simply reply "!SAME!" (all caps, and make sure that there are exclamation points on either side because my program will look for this string).
 
+
 ====
 
 # SECRETS

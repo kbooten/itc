@@ -1,12 +1,6 @@
 import os
 import json
 
-def get_main_prompt():
-    with open("main_game_prompt.txt",'r') as f:
-        main_prompt = f.read()
-    return main_prompt
-
-
 
 def build_prompt(user_input="what can I do?",user_yaml="data", history=""):
     with open("main_game_prompt.txt",'r') as f:
@@ -20,7 +14,7 @@ def build_prompt(user_input="what can I do?",user_yaml="data", history=""):
     main_prompt = main_prompt.replace("<<player_input>>",user_input)
     main_prompt = main_prompt.replace("<<player_yaml>>",user_yaml)
     main_prompt = main_prompt.replace("<<history>>",history)
-    print(main_prompt)
+    ##print(main_prompt)
     return main_prompt
 
 

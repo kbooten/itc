@@ -51,29 +51,25 @@ def process_history(history):
 
 
 def process_input(user_text, user_id, user_email, user_yaml, history):
-    """
-    get main llm response
-    threadedly start other changes to field, map, etc.
-    return main llm response
-    """
-    llm_response = get_llm_response(build_prompt(user_text, user_yaml, history))
-    user_yaml = maybe_update_user_yaml(user_text, llm_response, user_yaml) ## just update each time
-    thread = threading.Thread(target=process_input_slow_stuff, args=(user_text, user_id, user_email, llm_response, history))
-    thread.start()
-    return {"response":llm_response,"user_yaml":user_yaml}
+    try:
+        llm_response = get_llm_response(build_prompt(user_text, user_yaml, history))
+        user_yaml = maybe_update_user_yaml(user_text, llm_response, user_yaml)
+        thread = threading.Thread(target=process_input_slow_stuff, args=(user_text, user_id, user_email, llm_response, history))
+        thread.start()
+        return {"response": llm_response, "user_yaml": user_yaml}
+    except Exception as e:
+        return {"error": str(e)}, 500
+
 
 
 def process_input_slow_stuff(user_text, user_id, user_email, llm_response, history):
-    """
-    to be threaded so costly io and llm responses that won't be immediately returned 
-    won't block return of response
-        - update field (both prose description and yaml)
-        - send response to google sheets
-    """
-    maybe_update_field_yaml(user_text,llm_response,history)
-    maybe_update_field_prose(user_text,llm_response)
-    data_to_append = [[int(time.time()), user_id, user_text, llm_response]]
-    append_data_to_google_sheet(data_to_append)
+    try:
+        maybe_update_field_yaml(user_text, llm_response, history)
+        maybe_update_field_prose(user_text, llm_response)
+        data_to_append = [[int(time.time()), user_id, user_text, llm_response]]
+        append_data_to_google_sheet(data_to_append)
+    except Exception as e:
+        print(f"Error in process_input_slow_stuff: {e}")
 
 
 @app.route('/')
@@ -84,16 +80,28 @@ def home():
 
 @app.route("/send_message", methods=["POST"])
 def send_message():
-    user_input = request.form.get("message")
-    user_id = request.form.get("user_id")
-    user_email = request.form.get("user_email")
-    user_yaml = request.form.get("user_yaml")
-    history = process_history(json.loads(request.form.get("history")))
-    #last_n_turns = request.form.get("last_n_turns")
-    if user_input.strip():
-        response = process_input(user_input, user_id, user_email, user_yaml, history)
-        return jsonify({"user": "Same, KA", "text": response['response'], "user_yaml":response['user_yaml']})
-    return jsonify({"error": "No message received"})
+    try:
+        user_input = request.form.get("message")
+        user_id = request.form.get("user_id")
+        user_email = request.form.get("user_email")
+        history = request.form.get("history")
+        
+        # Attempt to parse the history JSON data
+        history = json.loads(history)
+        
+        # Process the history into a string format
+        history = process_history(history)
+        
+        if user_input.strip():
+            response = process_input(user_input, user_id, user_email, request.form.get("user_yaml"), history)
+            return jsonify({"user": "Same, KA", "text": response['response'], "user_yaml": response['user_yaml']})
+        else:
+            return jsonify({"error": "No message received"})
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format in history"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 def scheduled_task():
@@ -108,4 +116,4 @@ if __name__ == '__main__':
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())
 
-    app.run(debug=True,use_reloader=False)
+    app.run()
