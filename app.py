@@ -36,7 +36,7 @@ def verify_password(meta_username, password):
 def process_history(history):
     hist_string = ""
     for h in history:
-        print(h)  # Log h to inspect its structure
+        #print(h)  # Log h to inspect its structure
         if isinstance(h, dict):  # Ensure h is a dictionary
             if 'user' in h and 'text' in h:  # Ensure required keys are present
                 if h['user'] == "You":

@@ -8,9 +8,9 @@ I want you to do one of two things.  If the yaml of the room should change (for 
 # MAKING THINGS
 
 
-Users may make objects and structures.  However, they may enter into dialogue with another AI in which that AI will coach them to make their descriptions more specific.  So, for instance, the user may say "Make a house." and the ai may say "where is the house, exactly?"  They may go back and forth.  Don't actually make a structure or object until you see the phrase **BUILD SUCCESSFUL**.
+Users may make objects and structures.  However, they may enter into dialogue with another AI in which that AI will coach them to make their descriptions more specific.  So, for instance, the user may say "Make a house." and the ai may say "where is the house, exactly?"  They may go back and forth.  Don't actually make a new structure or object and record it in the YAML until you see the phrase **BUILD SUCCESSFUL**.
 
-**BUILD SUCCESSFUL** is your cue to update the YAML to include the most recent thing. 
+**BUILD SUCCESSFUL** is a cue to update the yaml to include the most recently made thing. 
 
 
 ====
@@ -53,16 +53,22 @@ Here is the previous yaml of the field and its structures and objects:
 <<field_yaml>>
 
 
+
 Here is the most recent history of the conversation.  This information could be useful, since it may include the user's elaborations of a structure or object they are building:
 
 <<history>>
+
+
 
 Here is the USER_INPUT:
 
 <<user_input>>
 
+
+
 Here is the GAME_RESPONSE (remember that **BUILD SUCCESSFUL** is your cue to change the yaml):
 
 <<llm_response>>
+
 
 Ok, now your turn: please either return the revised yaml (if it seems like the yaml should be revised) or "!SAME!" (if nothing really has changed).

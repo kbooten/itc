@@ -1,1 +1,1 @@
-The field is a 20x20 grid containing a small barn, a sturdy pitchfork, an intricate illustrations, and a yellow and red book. A barn with a table covered with books. You step inside and see a pitchfork leaning against the wall. On the table lies a yellow and red book with a cover: jagged red stripes over a yellow field.
+You are currently inside a small barn in the center of a 20x20 grid. Outside the barn, there is a sturdy pitchfork leaning against the wall, and on the table inside the barn sits a yellow and red book with a cover: jagged red stripes over a yellow field.

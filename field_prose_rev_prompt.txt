@@ -1,4 +1,4 @@
-The point of this task is to (possibly) revise a prose description based on some yaml data.  This data describes a field and all the buildings and other structures and objects on it.  It may include architectural details but also various other types of details and secrets.  This is in the context of a text-based game where the user has the power to create and move structures and objects, sort of like a super-powered architect. 
+The point of this task is to (possibly) revise a prose description of a setting.  I will show you some YAML data  describes a field and all the buildings and other structures and objects on it.  It may include architectural details but also various other types of details and secrets.  This is in the context of a text-based game where the user has the power to create and move structures and objects, sort of like a super-powered architect. 
 
 The game engine revises the yaml data for the field and its structures and objects first.  Your job is to make sure that the prose description of these things is up to date with the yaml data. I want you to do one of two things.  If---based on the yaml data---the description of the room needs to be updated (for instance, if the yaml has an object that the description does not have, or the yaml lacks an object that the description has and that must of been moved or otherwise deleted), please revise the description, changing as little of it as possible to keep track of the new information and otherwise simply repeating it word for word. If nothing should change, please simply reply "!SAME!" (all caps, and make sure that there are exclamation points on either side because my program will look for this string).
 
@@ -31,24 +31,28 @@ Your descriptions should NOT mention any of the secret_description data.  I repe
 
 ====
 
+Here is the previous prose description of the field and its structures and objects:
+
+<<field_prose>>
+
+
+
+Here is the most recent YAML describing the same thing; remember, the prose description should be revised to match it:
+
+<<field_yaml>>
+
+
 
 Here is the most recent USER_INPUT:
 
 <<user_input>>
+
+
 
 Here is the most recent GAME_RESPONSE:
 
 <<llm_response>>
 
 
-Here is the yaml:
-
-<<field_yaml>>
-
-
-Here is the previous prose description of the field and its structures and objects:
-
-
-<<field_prose>>
 
 Ok, now your turn: please either return the revised prose description (if it seems like the description should be revised to conform with the yaml) or "!SAME!" (if nothing really has changed).
