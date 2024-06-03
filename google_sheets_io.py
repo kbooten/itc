@@ -19,6 +19,7 @@ service = build('sheets', 'v4', credentials=creds)
 
 spreadsheetId="1_vH-JFTVr7VN6kKd0U_eJ7XEsRXvqOQ1vr9Eu-ciGSY"
 
+import time
 
 def append_data_to_google_sheet(values, service=service, range_name='interactions!A1'):
     try:
@@ -44,7 +45,7 @@ def write_field_to_google_sheets():
 
 
 def main():
-    write_field_to_google_sheets.write()
+    write_field_to_google_sheets()
 
 if __name__ == '__main__':
     main()

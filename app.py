@@ -66,7 +66,7 @@ def process_input_slow_stuff(user_text, user_id, user_email, llm_response, histo
     try:
         maybe_update_field_yaml(user_text, llm_response, history)
         maybe_update_field_prose(user_text, llm_response)
-        data_to_append = [[int(time.time()), user_id, user_text, llm_response]]
+        data_to_append = [[int(time.time()), user_id, user_text, user_email, llm_response]]
         append_data_to_google_sheet(data_to_append)
     except Exception as e:
         print(f"Error in process_input_slow_stuff: {e}")
@@ -111,7 +111,7 @@ def scheduled_task():
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=60)
+    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=5)
     scheduler.start()
     # Shut down the scheduler when exiting the app
     atexit.register(lambda: scheduler.shutdown())

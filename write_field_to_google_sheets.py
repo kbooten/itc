@@ -5,7 +5,7 @@ import json
 import time
 
 def current_field():
-	with open("_field_.txt","r") as f:
+	with open("_field_prose_.txt","r") as f:
 		return f.read()
 
 def current_field_yaml():
