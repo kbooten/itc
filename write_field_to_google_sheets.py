@@ -15,7 +15,7 @@ def current_field_yaml():
 
 def write():
 	spatial_info_to_write = [[int(time.time()), current_field(), current_field_yaml()]] ## timestamp, field description, map
-	append_data_to_google_sheet(spatial_info_to_write,range_name='field!A1')
+	append_data_to_google_sheet(spatial_info_to_write,range_name='updated_field!A1')
 	print("wrote spatial description + map to google")
 
 

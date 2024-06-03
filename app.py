@@ -104,16 +104,16 @@ def send_message():
 
 
 
-# def scheduled_task():
-#     write_field_to_google_sheets()
-#     print(f"Scheduled task (writing rooms to sheets) executed at {datetime.datetime.now()}")
+def scheduled_task():
+    write_field_to_google_sheets()
+    print(f"Scheduled task (writing rooms to sheets) executed at {datetime.datetime.now()}")
 
 
 if __name__ == '__main__':
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(func=scheduled_task, trigger="interval", minutes=30)
-    # scheduler.start()
-    # # Shut down the scheduler when exiting the app
-    # atexit.register(lambda: scheduler.shutdown())
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=scheduled_task, trigger="interval", minutes=30)
+    scheduler.start()
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
 
     app.run()
