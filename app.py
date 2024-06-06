@@ -26,7 +26,7 @@ users = {
 } 
 
 
-@auth.verify_password
+#@auth.verify_password
 def verify_password(meta_username, password):
     if meta_username in users and users[meta_username] == password:
         return meta_username
@@ -73,7 +73,7 @@ def process_input_slow_stuff(user_text, user_id, user_email, llm_response, histo
 
 
 @app.route('/')
-@auth.login_required
+#@auth.login_required
 def home():
     return render_template('chat.html')
 
