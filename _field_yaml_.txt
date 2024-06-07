@@ -1,26 +1,130 @@
+```yaml
 field:
   objects: []
   structures:
     - name: small barn
-      public_description: "A barn with a table covered with books."
+      public_description: "A barn with a table covered with books. A tall, black metal wall bisects the barn from north to south. The weathered exterior is peeling rapidly under the heavy acid rain."
       location: "center of field"
       location_in_cube: (25, 25, 0)  # Placed at the center of the field at ground level
       secret_description: []
       connections: []
       objects:
         - name: old table
-          public_description: "An old, rickety wooden table."
-          location: "near the back of the room"
+          public_description: "An old, rickety wooden table showing signs of distress, creaking and cracking under the acid rain and the strong winds."
+          location: "near the back of the room, west side of the wall"
           location_in_cube: (25, 25, 0)  # Same as the barn, specific location within the barn
           secret_description: none
         - name: yellow and red book
-          public_description: "A book with a cover: jagged red stripes over a yellow field."
-          location: "on the table"
-          location_in_cube: (25, 25, 0)  # Same as the table, specific location on the table
+          public_description: "A book with a cover: jagged red stripes over a yellow field. The cover warps and the colors bleed, absorbing the acidic rain. It tumbles across the floor due to the strong gusts of wind."
+          location: "with the player"
+          location_in_cube: none  # In possession of the player
           secret_description: >
             The user can read the book starting at page 0.
             Turning the page makes the page go backwards (-1, -2).
-            Each page has a picture of an angel/engine (an angel that is locamotive and full of devices).
+            Each page has a picture of an angel/engine (an angel that is locomotive and full of devices).
             This picture is made out of unicode glyphs. The user should see an actual unicode character image, not just a mere description of the angel/engine.
             The more negative the page number is, the more complex the picture is. It should start small and simple at -1 then get very complex and scary by -10.
             Again: you, the ai, should generate a unicode picture of an angel/engine and return it to them when they are reading a page of the book.
+        - name: black metal wall
+          public_description: "A 9-foot high black metal wall that bisects the barn from north to south, dividing the space into eastern and western halves. The metal stands firm against the corrosive rain."
+          location: "middle of the barn"
+          location_in_cube: (25, 25, 0)
+          secret_description: none
+    - name: pond of blood
+      public_description: "A massive pond of dark, viscous blood at the edge of the field. The water emits an overpowering scent of copper and sulfur mingling with the rank odor of rotted meat. The acidic rain causes the pond to hiss and bubble violently, releasing noxious fumes."
+      location: "edge of the field"
+      location_in_cube: (0, 0, 0)  # Assuming it's at the bottom-left far corner
+      secret_description: []
+      connections: []
+      objects:
+        - name: mind cage
+          public_description: "An abstract, surreal cage made of mind materials, floating above the pond of blood. Now disassembled, its iridescent glow dissipated into the surroundings."
+          location: "floating above the pond of blood"
+          location_in_cube: (0, 0, 1)  # Floating above the pond
+          secret_description: none
+        - name: serial killer
+          public_description: "An ominous figure, now liberated from the mind cage. His presence exudes a malevolence, amplified by the pulsating energy that was once contained within the cage."
+          location: "with the player"
+          location_in_cube: (0, 0, 0)
+          secret_description: none
+        - name: twisted metal frames
+          public_description: "Twisted metal frames, remnants of ancient machinery, submerged in the pond's dark, viscous blood. They hint at forgotten technology now entwined with the eerie atmosphere of the field."
+          location: "bottom of the blood pond"
+          location_in_cube: (0, 0, -1)
+          secret_description: none
+        - name: angelic statue fragments
+          public_description: "Pieces of angelic statues, half-submerged in the coagulated blood. Their divine forms are now part of the eerie tableau beneath the pond."
+          location: "bottom of the blood pond"
+          location_in_cube: (0, 0, -1)
+          secret_description: none
+        - name: small cylindrical device
+          public_description: "A small cylindrical device, faintly glowing, partly embedded within the ancient machinery and twisted metal at the bottom of the blood pond."
+          location: "inserted into the mind cage"
+          location_in_cube: none
+          secret_description: none
+    - name: jelly cube
+      public_description: "A 26 ft by 26 ft by 26 ft green jelly cube with a texture that oscillates between ooze, slime, and jelly. It wobbles violently under the acid rain and strong winds, with the texture bubbling and warping."
+      location: "outside the barn"
+      location_in_cube: (26, 25, 0)  # Placed close to the barn
+      secret_description: none
+      objects:
+        - name: 10,000 knives
+          public_description: "A daunting heap of 10,000 knives of varying shapes and sizes made of alien metals. The pile casts a deep black shadow, and the sound of metal clinking fills the air. The knives shift dangerously as the jelly cube destabilizes under the acid rain and strong winds. The violent gashes you inflicted to escape have caused the knives to scatter inconsistently inside the cube."
+          location: "inside the jelly cube"
+          location_in_cube: (26, 25, 0)  # Same cube as the jelly cube
+          secret_description: none
+    - name: ominous tower
+      public_description: "A tower made of black metal that absorbs the light of the clustered moons. It stands at an imposing height, with a twisted, angular design and an oily, shimmering surface that reflects distorted images of the landscape. A single entrance at the base leads into impenetrable darkness."
+      location: "southern edge of the field"
+      location_in_cube: (0, -25, 0)  # Assuming it's placed at the southern edge of the field
+      secret_description: none
+      connections: []
+      objects:
+        - name: bright orange jacket
+          public_description: "A bright orange jacket made of thick fabric, designed to provide warmth and some protection against the elements."
+          location: none  # Worn by the player
+          location_in_cube: none
+          secret_description: none
+        - name: bright orange pants
+          public_description: "A pair of sturdy and practical bright orange pants, matching the jacket in both material and hue."
+          location: none  # Worn by the player
+          location_in_cube: none
+          secret_description: none
+        - name: bright orange boots
+          public_description: "A pair of robust, bright orange boots, promising to endure the rocky terrain and acidic rain."
+          location: none  # Worn by the player
+          location_in_cube: none
+          secret_description: none
+        - name: identical version of the player
+          public_description: "An identical version of yourself, wearing a bright orange jacket, pants, and boots. It stands motionless, almost like a statue, mirroring your stoic and resolute expression."
+          location: "with the player"
+          location_in_cube: none
+          secret_description: none
+    - name: bright orange scuba suits
+      public_description: "Two bright orange scuba suits retrieved from the ground. The underwater gear is designed to withstand the corrosive effects of the acidic rain and the unknown properties of the dark, viscous blood in the pond. The suits shimmer slightly, their vibrant hue standing out starkly against the grim surroundings."
+      location: "near the pond of blood"
+      location_in_cube: (0, 1, 0)
+      secret_description: none
+  characters: 
+    - name: identical version of the player
+      public_description: "An identical version of yourself, wearing a bright orange jacket, pants, and boots. It stands motionless, almost like a statue, mirroring your stoic and resolute expression."
+      location: "with the player"
+      location_in_cube: none  # Following the player
+      secret_description: none
+  objects:
+    - name: immense floating hand
+      public_description: "An immense floating hand in the sky above the barn, wearing a white glove with five fingers extended outwards, seemingly grasping at the air. The white glove appears impervious to the acid's effects but wavers slightly in the strong winds."
+      location: "above the barn"
+      location_in_cube: (25, 25, 10)  # Assuming it's floating relatively close to the earth but still in the sky, above the barn.
+      secret_description: none
+    - name: neatly folded clothes
+      public_description: "A tidy pile of neatly folded clothes, left on the ground near the jelly cube. The fabric begins to hiss slightly under the acid rain, small spots forming where the acidic droplets make contact."
+      location: "in front of the jelly cube"
+      location_in_cube: (26, 25, 0)
+      secret_description: none
+    - name: alien knife
+      public_description: "A sharp, slick alien knife in the player's twin's grasp, its metallic surface glistening with an otherworldly sheen. The knife’s alien design exudes a menacing aura."
+      location: "held by the player's twin"
+      location_in_cube: none
+      secret_description: none
+```
