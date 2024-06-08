@@ -62,6 +62,11 @@ field:
           location: "inserted into the mind cage"
           location_in_cube: none
           secret_description: none
+        - name: intricate key
+          public_description: "A small, intricately designed key, surface adorned with divine and infernal symbols, found within the submerged chamber."
+          location: "in possession of the player"
+          location_in_cube: none
+          secret_description: none
     - name: jelly cube
       public_description: "A 26 ft by 26 ft by 26 ft green jelly cube with a texture that oscillates between ooze, slime, and jelly. It wobbles violently under the acid rain and strong winds, with the texture bubbling and warping."
       location: "outside the barn"
