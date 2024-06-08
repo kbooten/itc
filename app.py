@@ -95,7 +95,6 @@ def send_message():
         if user_input.strip():
             response = process_input(user_input, user_id, user_email, request.form.get("user_yaml"), history)
             jsonify({"user": "Same, KA", "text": response['response'], "user_yaml": response['user_yaml']})
-            input("?")
             return jsonify({"user": "Same, KA", "text": response['response'], "user_yaml": response['user_yaml']})
         else:
             return jsonify({"error": "No message received"})
